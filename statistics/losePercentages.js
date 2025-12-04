@@ -1,7 +1,6 @@
-import {name} from './utils.js';
 
 
-export function losePercentage(dataFile)
+export function losePercentage(dataFile,name)
 {
     let lostByCheckmate = 0;
     let lostByResignation = 0;
@@ -9,6 +8,10 @@ export function losePercentage(dataFile)
 
     let losetotal = 0;
     
+
+    const finalLoseList = [];
+
+
     for(let i=0;i<dataFile.games.length;i++) 
     {
         if(!dataFile.games[i].white.result || !dataFile.games[i].black.result) continue
@@ -60,6 +63,7 @@ export function losePercentage(dataFile)
     if(losetotal === 0) 
     {
         console.log("No loses found. \n");
+        finalLoseList.push("NA");
         return;
     }
         
@@ -68,11 +72,19 @@ export function losePercentage(dataFile)
     console.log(    "Total checkmate loses: " + lostByCheckmate + "\n");
     console.log(    "Checkmate loses percentage: " + Math.round((lostByCheckmate/losetotal)*100) + "\n");
 
+    finalLoseList.push(lostByCheckmate,Math.round((lostByCheckmate/losetotal)*100));
+
     console.log("Loses By Resignation: \n");
     console.log(    "Total Resignation loses: " + lostByResignation + "\n");
     console.log(    "Resignation loses percentage: " + Math.round((lostByResignation/losetotal)*100) + "\n");
 
+    finalLoseList.push(lostByResignation,Math.round((lostByResignation/losetotal)*100));
+
     console.log("Loses By timeout: \n");
     console.log(    "Total timeout loses: " + lostByTimeOut + "\n");
     console.log(    "Timeout loses percentage: " + Math.round((lostByTimeOut/losetotal)*100) + "\n");
+
+    finalLoseList.push(lostByTimeOut,Math.round((lostByTimeOut/losetotal)*100));
+
+    return finalLoseList;
 }

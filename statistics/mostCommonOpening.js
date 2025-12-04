@@ -1,8 +1,9 @@
-import { name } from './utils.js';
 
-export function CommonOpenings(dataFile) {
+export function CommonOpenings(dataFile,name) {
     
     const usernameLower = name.toLowerCase();
+
+    const finalOpeningList = [];
 
     // Maps to count openings and wins/losses
     const whiteOpenings = new Map(); // key: opening string, value: { count, wins, draws, losses }
@@ -90,8 +91,12 @@ export function CommonOpenings(dataFile) {
         console.log('Most common opening as White:', mostWhite.opening);
         console.log('Count:', count);
         console.log('Winrate:', winrate);
+
+        finalOpeningList.push(mostWhite.opening,count,winrate);
+
     } else {
         console.log('Not enough White games found for opening analysis.');
+        finalOpeningList.push("NA");
     }
 
     if (mostBlack) {
@@ -100,7 +105,13 @@ export function CommonOpenings(dataFile) {
         console.log('\nMost common opening as Black:', mostBlack.opening);
         console.log('Count:', count);
         console.log('Winrate:', winrate);
+
+        finalOpeningList.push(mostBlack.opening,count,winrate);
+        
     } else {
         console.log('Not enough Black games found for opening analysis.');
+        finalOpeningList.push("NA");
     }
+
+    return finalOpeningList;
 }

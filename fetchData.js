@@ -1,24 +1,26 @@
-import { writeFile } from "node:fs/promises";
-
 export async function getData(name,mainOption,subOption)
 {
-    
 
+    const checkurl = `https://api.chess.com/pub/player/${name}`;
 
-    const url = `https://api.chess.com/pub/player/ffijidbfi/games/2025/11`;
-
-
-
-    const response = await fetch(url);
-
-    if(!response.ok)
+    const checkresponse = await fetch(checkurl);
+    if(checkresponse.status !== 200)
     {
-        console.error("Response error: " + response.status);
+        console.log("No player name found. \n");
+        return;
     }
 
-    const dataFile = await response.json();
+    const url = `https://api.chess.com/pub/player/${name}/games/2025/11`;
 
-    await writeFile("./chessPGN.json", JSON.stringify(dataFile, null, 2), "utf8");
-  
-    return dataFile;
+    const response = await fetch(url);
+    if(!response.ok)
+        {
+            console.error("Request failed with status: " +response.status);
+            return;
+        }
+
+    const data = await response.json();
+
+   
+    return data;
 }

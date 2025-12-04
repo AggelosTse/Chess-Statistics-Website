@@ -1,6 +1,5 @@
-import {name} from './utils.js';
 
-export function winPercentage(dataFile)
+export function winPercentage(dataFile,name)
 {
     let wonByCheckmate = 0;
     let wonByResignation = 0;
@@ -8,6 +7,7 @@ export function winPercentage(dataFile)
 
     let totalwins = 0;
 
+    const finalWinList = [];
 
     for(let i=0;i<dataFile.games.length;i++) 
     {
@@ -63,6 +63,7 @@ export function winPercentage(dataFile)
     if(totalwins === 0)
     {
         console.log("No wins found.");
+        finalWinList.push("NA");
         return;
     }
 
@@ -70,11 +71,19 @@ export function winPercentage(dataFile)
     console.log(    "Total checkmate wins: " + wonByCheckmate + "\n");
     console.log(    "Checkmate wins percentage:: " + Math.round((wonByCheckmate/totalwins)*100) + "\n");
 
+    finalWinList.push(wonByCheckmate,Math.round((wonByCheckmate/totalwins)*100));
+
     console.log("Wins By Resignation: \n");
     console.log(    "Total Resignation wins: " + wonByResignation + "\n");
     console.log(    "Rrsignation wins percentage:: " + Math.round((wonByResignation/totalwins)*100) + "\n");
 
+    finalWinList.push(wonByResignation,Math.round((wonByResignation/totalwins)*100));
+
     console.log("Wins By timeout: \n");
     console.log(    "Total timeout wins: " + wonByTimeOut + "\n");
     console.log(    "Timeout wins percentage:: " + Math.round((wonByTimeOut/totalwins)*100) + "\n");
+
+    finalWinList.push(wonByTimeOut,Math.round((wonByTimeOut/totalwins)*100));
+
+    return finalWinList;
 }

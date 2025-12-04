@@ -1,7 +1,4 @@
-import {name} from './utils.js';
-
-
-export function averageAccuracy(dataFile)
+export function averageAccuracy(dataFile,name)
 {
     let generalSum = 0;
     let whiteSum = 0;
@@ -11,6 +8,7 @@ export function averageAccuracy(dataFile)
     let whitePL = 0;
     let blackPL = 0;
   
+    const accuracyArray = [];
 
     for(let i=0; i<dataFile.games.length;i++)
     {
@@ -41,21 +39,39 @@ export function averageAccuracy(dataFile)
     }
     if (generalPL === 0) {
         console.log("No games played in this period.");
+
+        accuracyArray.push("NA");
         return;
     }
 
     console.log("General Accuracy:", Math.round((generalSum / generalPL)));
+    accuracyArray.push(generalSum / generalPL);
 
     if (whitePL > 0)
+    {
         console.log("White Accuracy:", Math.round((whiteSum / whitePL)));
-    else
+        accuracyArray.push(whiteSum / whitePL);
+    }
+    else 
         console.log("No white games played in this period.");
+        accuracyArray.push("NA");
 
     if (blackPL > 0)
-        console.log("Black Accuracy:", Math.round((blackSum / blackPL)));
-    else
-        console.log("No black games played in this period.");
-   
-    
+    {
 
+    
+        console.log("Black Accuracy:", Math.round((blackSum / blackPL)));
+        accuracyArray.push(blackSum / blackPL);
+    }
+
+    else
+    {
+
+    
+        console.log("No black games played in this period.");
+        accuracyArray.push("NA");
+   
+    }
+
+    return accuracyArray;
 }

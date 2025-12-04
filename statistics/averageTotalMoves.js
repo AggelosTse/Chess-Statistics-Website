@@ -1,6 +1,5 @@
-import {name} from './utils.js';
 
-export function averageMoves(dataFile)
+export function averageMoves(dataFile,name)
 {
     let sumWhiteMoves = 0;
     let sumBlackMoves = 0;
@@ -62,5 +61,7 @@ export function averageMoves(dataFile)
     }
 
     console.log("Average Ammount of moves per game: " + median.toFixed(0));
+
+    return median.toFixed(0);
 }
 

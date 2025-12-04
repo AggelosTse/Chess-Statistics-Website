@@ -1,9 +1,11 @@
-import {name} from './utils.js';
 
 
-export function streaks(dataFile)
+export function streaks(dataFile,name)
 {
    let results = [];
+
+   const finalStreaksList = [];
+
     for(let i=0;i<dataFile.games.length;i++)
     {
         if(dataFile.games[i].white.username.toLowerCase() === name.toLowerCase())
@@ -64,6 +66,8 @@ function findWinStreak(results) {
 
     console.log("All win streaks:", listOfWinCounts);
     console.log("Longest win streak:", Math.max(0, ...listOfWinCounts));
+    
+    finalStreaksList.push(Math.max(0, ...listOfWinCounts));
 }
 
 
@@ -85,6 +89,9 @@ function findDrawStreak(results)
 
     console.log("All draw streaks:", listOfDrawCounts);
     console.log("Longest draw streak:", Math.max(0, ...listOfDrawCounts));
+
+    finalStreaksList.push(Math.max(0, ...listOfDrawCounts));
+
 }
 
 function findLoseStreak(results)
@@ -105,6 +112,8 @@ function findLoseStreak(results)
 
     console.log("All lose streaks:", listOfLoseCounts);
     console.log("Longest lose streak:", Math.max(0, ...listOfLoseCounts));
+
+    finalStreaksList.push(Math.max(0, ...listOfLoseCounts));
 }
 
 

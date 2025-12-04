@@ -1,7 +1,4 @@
-import {name} from './utils.js';
-
-
-export function averageOpponentElo(dataFile)
+export function averageOpponentElo(dataFile,name)
 {
     let pl = 0;
     let sum = 0;
@@ -32,4 +29,5 @@ export function averageOpponentElo(dataFile)
     let average = Math.round(sum/pl);
     
     console.log("Average opponent elo: " + average + "\n");
+    return average;
 }

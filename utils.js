@@ -1,39 +1,45 @@
-import { getData } from './fetchData.js';
-import {averageAccuracy} from './averageAccuracy.js';
-import { totalGames } from './totalGamesPlayed.js';
-import { averageOpponentElo } from './averageOpponentElo.js';
-import { winPercentage } from './winPercentages.js';
-import { drawPercentage } from './drawPercentages.js';
-import { losePercentage } from './losePercentages.js';
-import { CommonOpenings } from './mostCommonOpening.js';
-import { streaks } from './streak.js';
-import { averageMoves } from './averageTotalMoves.js';
-import { highestOpponentElo } from './highestOpponentElo.js';
+import { getData} from './fetchData.js';
+import { makejson} from './resultToJson.js';
+import {averageAccuracy} from './statistics/averageAccuracy.js';
+import { totalGames } from './statistics/totalGamesPlayed.js';
+import { averageOpponentElo } from './statistics/averageOpponentElo.js';
+import { winPercentage } from './statistics/winPercentages.js';
+import { drawPercentage } from './statistics/drawPercentages.js';
+import { losePercentage } from './statistics/losePercentages.js';
+import { CommonOpenings } from './statistics/mostCommonOpening.js';
+import { streaks } from './statistics/streak.js';
+import { averageMoves } from './statistics/averageTotalMoves.js';
+import { highestOpponentElo } from './statistics/highestOpponentElo.js';
 
 
 export async function nextPhase(name,mainOption,subOption)
 {
+    
+
     const data = await getData(name,mainOption,subOption);
 
-    averageAccuracy(data);
 
-    totalGames(data);
+    const accuracy = averageAccuracy(data,name);            //list, 1st element general,2nd white, 3rd black
 
-    averageOpponentElo(data);
+    const total = totalGames(data);                         //number
 
-    highestOpponentElo(data);
+    const averageOpponElo = averageOpponentElo(data,name);  //number
 
-    winPercentage(data);
+    const highestOppElo = highestOpponentElo(data,name);    //list, 1st element elo played, 2nd element elo won
 
-    drawPercentage(data);
+    const winPerc = winPercentage(data,name);  //list, diades apo stixia, tin mia arithmos tin alli pososto
 
-    losePercentage(data);
+    const drawPerc = drawPercentage(data);      //list, diades apo stixia, tin mia arithmos tin alli pososto
 
-    CommonOpenings(data);
+    const losePerc = losePercentage(data,name); //list, diades apo stixia, tin mia arithmos tin alli pososto
 
-    streaks(data);
+    const commonOp = CommonOpenings(data,name);  //list, 1st element NA h mia tripleta apo stixia
 
-    averageMoves(data);
+    const streak = streaks(data,name);      //list, niki-isopalia-itta
+
+    const averagMove = averageMoves(data,name); //value 
+
+    const results = makejson(accuracy,total,averageOpponElo,highestOppElo,winPerc,drawPerc,losePerc,commonOp,streak,averagMove);
 
 
 }

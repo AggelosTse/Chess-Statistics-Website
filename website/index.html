@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chess Time Range UI</title>
+  <link rel="stylesheet" href="style.css">
+  </head>
+<body>
+
+  
+  <p id="results">Statistics will load here...</p>
+
+
+  <div class="card">
+      <label>Chess.com Username</label>
+      <input type="text" id="name" placeholder="Enter your username">
+
+      <label>Time Category</label>
+      <select id="mainOption">
+          <option value="">-- Select Time Range --</option>
+          <option value="Days">Days</option>
+          <option value="Months">Months</option>
+          <option value="Years">Years</option>
+      </select>
+
+      <div id="subOptionsContainer"></div>
+      <div id="submitContainer"></div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+  
+</body>
+</html>
