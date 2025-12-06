@@ -1,3 +1,5 @@
+import { getDaysData,getMonthsData,getYearsData } from "./getUserDataChoise";
+
 export async function getData(name,mainOption,subOption)
 {
 
@@ -10,16 +12,25 @@ export async function getData(name,mainOption,subOption)
         return;
     }
 
-    const url = `https://api.chess.com/pub/player/${name}/games/2025/11`;
 
-    const response = await fetch(url);
-    if(!response.ok)
-        {
-            console.error("Request failed with status: " +response.status);
-            return;
-        }
+    switch(mainOption)         //[1, 3, 7, 14, 21, 30];
+    {
+        case "Days":
+            {
+                data = await getDaysData(name, subOption);
+            }
+        case "Months":
+            {
+                data = await getMonthsData(name, subOption);
+            }
+        case "Years":
+            {
+                data = await getYearsData(name, subOption);
+            }
+    }
 
-    const data = await response.json();
+
+
 
    
     return data;

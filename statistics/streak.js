@@ -4,7 +4,7 @@ export function streaks(dataFile,name)
 {
    let results = [];
 
-   const finalStreaksList = [];
+   //const finalStreaksList = [];
 
     for(let i=0;i<dataFile.games.length;i++)
     {
