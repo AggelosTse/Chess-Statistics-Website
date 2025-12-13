@@ -1,5 +1,8 @@
 export function averageAccuracy(dataFile,name)
 {
+
+    if (!Array.isArray(dataFile)) return [0,0,0];    //checks if datafile is a array
+
     let generalSum = 0;
     let whiteSum = 0;
     let blackSum = 0;
@@ -12,26 +15,34 @@ export function averageAccuracy(dataFile,name)
 
     for(let i=0; i<dataFile.length;i++)
     {
-       
-        if(dataFile[i].white.username.toLowerCase() === name.toLowerCase())
+        const whiteAccuracy = dataFile[i].accuracies.white;
+        const blackAccuracy = dataFile[i].accuracies.black;
+
+        const whiteName = dataFile[i].white.username;
+        const blackName = dataFile[i].black.username; 
+        
+        
+
+
+        if(whiteName.toLowerCase() === name.toLowerCase())
         {
 
-            if(!dataFile[i].accuracies || !dataFile[i].accuracies.white) continue;
+            if(!dataFile[i].accuracies || !whiteAccuracy) continue;
             
-            generalSum += dataFile[i].accuracies.white;
+            generalSum += whiteAccuracy;
             generalPL++;
 
-            whiteSum += dataFile[i].accuracies.white;
+            whiteSum += whiteAccuracy;
             whitePL++;
         }
-        else if(dataFile[i].black.username.toLowerCase() === name.toLowerCase())
+        else if(blackName.toLowerCase() === name.toLowerCase())
         {
-            if(!dataFile[i].accuracies || !dataFile[i].accuracies.black) continue;
+            if(!dataFile[i].accuracies || !blackAccuracy) continue;
 
-            generalSum += dataFile[i].accuracies.black;
+            generalSum += blackAccuracy;
             generalPL++;
 
-            blackSum += dataFile[i].accuracies.black;
+            blackSum += blackAccuracy;
             blackPL++;
         }
     }
@@ -47,24 +58,16 @@ export function averageAccuracy(dataFile,name)
     }
     else 
     {
-        console.log("No white games played in this period.");
-        accuracyArray.push("NA");
+        accuracyArray.push(0);
     }
 
     if (blackPL > 0)
     {
-
-    
-        console.log("Black Accuracy:", Math.round((blackSum / blackPL)));
         accuracyArray.push(blackSum / blackPL);
     }
-
     else
     {
-
-    
-        console.log("No black games played in this period.");
-        accuracyArray.push("NA");
+        accuracyArray.push(0);
    
     }
 

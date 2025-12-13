@@ -77,39 +77,19 @@ export async function getDaysData(name, subOption)
     let finalListOfGames = [];
 
     
+    const subOptionList = [1,3,7,14,21,30];
 
-    switch(subOption)
-        {
-            
-            case 1:
-                 finalListOfGames = getDifferentDays(allGames, currentTime, subOption);
-                 break;
-             
-            case 3:
-                finalListOfGames = getDifferentDays(allGames, currentTime, subOption);
-                break;
-
-            case 7:
-                finalListOfGames = getDifferentDays(allGames, currentTime, subOption);
-                break;
-
-            case 14:
-                finalListOfGames = getDifferentDays(allGames, currentTime, subOption);
-                break;
-
-            case 30:
-                finalListOfGames = getDifferentDays(allGames, currentTime, subOption);
-                break;
-
-        }
-       
+    if(subOptionList.includes(subOption))
+    {
+        finalListOfGames = getDifferentDays(allGames, currentTime, subOption);
         return finalListOfGames;
+    }
+    else
+    {
+        return [];
+    }
 }
 
-export async function getMonthsData(subOption)
-{
-    
-}
 
 export async function getYearsData(subOption)
 {

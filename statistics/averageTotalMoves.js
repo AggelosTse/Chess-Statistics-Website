@@ -10,6 +10,11 @@ export function averageMoves(dataFile,name)
 
     for(let i=0;i<dataFile.length;i++)
     {
+
+        const whiteName = dataFile[i].white.username;
+        const blackName = dataFile[i].black.username;
+
+
         const movesOnly = dataFile[i].pgn
 
             .replace(/\[.*?\]/gs, '')              // Remove headers
@@ -23,7 +28,7 @@ export function averageMoves(dataFile,name)
 
         if(!moves) continue;
 
-        if(dataFile[i].white.username.toLowerCase() === name.toLowerCase())
+        if(whiteName.toLowerCase() === name.toLowerCase())
         {
             for(let j=0;j<moves.length;j+=2)
             {
@@ -33,7 +38,7 @@ export function averageMoves(dataFile,name)
             listOfTotalMoves.push(sumWhiteMoves);
             sumWhiteMoves = 0;
         }
-        else if(dataFile[i].black.username.toLowerCase() === name.toLowerCase())
+        else if(blackName.toLowerCase() === name.toLowerCase())
         {
             for(let j=1;j<moves.length;j+=2)
                 {
@@ -60,7 +65,6 @@ export function averageMoves(dataFile,name)
       median = listOfTotalMoves[mid];
     }
 
-    console.log("Average Ammount of moves per game: " + median.toFixed(0));
 
     return median.toFixed(0);
 }

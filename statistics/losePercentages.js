@@ -14,22 +14,28 @@ export function losePercentage(dataFile,name)
 
     for(let i=0;i<dataFile.length;i++) 
     {
-        if(!dataFile[i].white.result || !dataFile[i].black.result) continue
+        const whiteResult = dataFile[i].white.result;
+        const blackResult = dataFile[i].black.result;
+
+        const whiteName = dataFile[i].white.username;
+        const blackName = dataFile[i].black.username; 
+
+        if(!whiteResult || !blackResult) continue
 
 
-        if(dataFile[i].white.username.toLowerCase() === name.toLowerCase())
+        if(whiteName.toLowerCase() === name.toLowerCase())
         {
-                if(dataFile[i].white.result.toLowerCase() === "checkmated")
+                if(whiteResult.toLowerCase() === "checkmated")
                 {
                     lostByCheckmate++;
                     losetotal++;
                 }
-                else if(dataFile[i].white.result.toLowerCase() === "resigned")
+                else if(whiteResult.toLowerCase() === "resigned")
                     {
                         lostByResignation++;
                         losetotal++;
                     }
-                else if(dataFile[i].white.result.toLowerCase() === "timeout")
+                else if(whiteResult.toLowerCase() === "timeout")
                         {
                             lostByTimeOut++;
                             losetotal++;
@@ -37,19 +43,19 @@ export function losePercentage(dataFile,name)
             
         }
 
-        else if (dataFile[i].black.username.toLowerCase() === name.toLowerCase())
+        else if (blackName.toLowerCase() === name.toLowerCase())
         {
-                    if(dataFile[i].black.result.toLowerCase() === "checkmated")
+                    if(blackResult.toLowerCase() === "checkmated")
                     {
                         lostByCheckmate++;
                         losetotal++;
                     }
-                    else if(dataFile[i].black.result.toLowerCase() === "resigned")
+                    else if(blackResult.toLowerCase() === "resigned")
                         {
                             lostByResignation++;
                             losetotal++;
                         }
-                    else if(dataFile[i].black.result.toLowerCase() === "timeout")
+                    else if(blackResult.toLowerCase() === "timeout")
                         {
                              lostByTimeOut++;
                              losetotal++;
@@ -66,21 +72,10 @@ export function losePercentage(dataFile,name)
     }
         
         
-    console.log("Loses By Checkmates: \n");
-    console.log(    "Total checkmate loses: " + lostByCheckmate + "\n");
-    console.log(    "Checkmate loses percentage: " + Math.round((lostByCheckmate/losetotal)*100) + "\n");
 
     finalLoseList.push(lostByCheckmate,Math.round((lostByCheckmate/losetotal)*100));
 
-    console.log("Loses By Resignation: \n");
-    console.log(    "Total Resignation loses: " + lostByResignation + "\n");
-    console.log(    "Resignation loses percentage: " + Math.round((lostByResignation/losetotal)*100) + "\n");
-
     finalLoseList.push(lostByResignation,Math.round((lostByResignation/losetotal)*100));
-
-    console.log("Loses By timeout: \n");
-    console.log(    "Total timeout loses: " + lostByTimeOut + "\n");
-    console.log(    "Timeout loses percentage: " + Math.round((lostByTimeOut/losetotal)*100) + "\n");
 
     finalLoseList.push(lostByTimeOut,Math.round((lostByTimeOut/losetotal)*100));
 

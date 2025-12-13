@@ -2,6 +2,9 @@
 export function highestOpponentElo(dataFile,name)
 {
 
+    if (!Array.isArray(dataFile)) return [0,0];
+    
+
     let listOfHighestElo = [];
     let listOfHighestEloWon = [];
 
@@ -9,32 +12,41 @@ export function highestOpponentElo(dataFile,name)
 
     for(let i=0;i<dataFile.length;i++)
     {
+
         if(!dataFile[i].white || !dataFile[i].black) continue;
 
-        if(dataFile[i].white.username.toLowerCase() === name.toLowerCase())
+        const whiteResult = dataFile[i].white.result;
+        const blackResult = dataFile[i].black.result;
+    
+        const whiteRating = dataFile[i].white.rating;
+        const blackRating = dataFile[i].black.rating;
+    
+        const whiteName = dataFile[i].white.username;
+        const blackName = dataFile[i].black.username;
+
+
+        if(whiteName.toLowerCase() === name.toLowerCase())
         {
-            if(dataFile[i].white.result === "win")
+            if(whiteResult === "win")
             {
-                listOfHighestEloWon.push(dataFile[i].black.rating);   
+                listOfHighestEloWon.push(blackRating);   
             }
-            listOfHighestElo.push(dataFile[i].black.rating);  
+            listOfHighestElo.push(blackRating);  
             
         }
-        else if(dataFile[i].black.username.toLowerCase() === name.toLowerCase())
+        else if(blackName.toLowerCase() === name.toLowerCase())
             {
-                if(dataFile[i].black.result === "win")
+                if(blackResult === "win")
                 {
-                    listOfHighestEloWon.push(dataFile[i].white.rating);   
+                    listOfHighestEloWon.push(whiteRating);   
                 }
-                listOfHighestElo.push(dataFile[i].white.rating);  
+                listOfHighestElo.push(whiteRating);  
                 
             }
             
     }
     
-    console.log("Opponent wit the most elo you've played: " + Math.max(0, ...listOfHighestElo));
-    console.log("Opponent with the most elo you've won: " + Math.max(0, ...listOfHighestEloWon));
-
+   
     highestopplist.push(Math.max(0, ...listOfHighestElo),Math.max(0, ...listOfHighestEloWon));
     return highestopplist;
 }

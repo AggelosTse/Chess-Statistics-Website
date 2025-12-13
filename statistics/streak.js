@@ -1,5 +1,3 @@
-
-
 export function streaks(dataFile,name)
 {
    let results = [];
@@ -8,33 +6,40 @@ export function streaks(dataFile,name)
 
     for(let i=0;i<dataFile.length;i++)
     {
-        if(dataFile[i].white.username.toLowerCase() === name.toLowerCase())
+        const whiteName = dataFile[i].white.username;
+        const blackName = dataFile[i].black.username;
+        
+        const whiteResult = dataFile[i].white.result;
+        const blackResult = dataFile[i].black.result;
+
+
+        if(whiteName.toLowerCase() === name.toLowerCase())
         {
-            if(dataFile[i].white.result.toLowerCase() === "win")
+            if(whiteResult.toLowerCase() === "win")
             {
-                results.push(dataFile[i].white.result);
+                results.push(whiteResult);
             }
-            else if(dataFile[i].white.result.toLowerCase() === "stalemate" || dataFile[i].white.result.toLowerCase() === "agreed" || dataFile[i].white.result.toLowerCase() === "repetition" || dataFile[i].white.result.toLowerCase() === "insufficient")
+            else if(whiteResult.toLowerCase() === "stalemate" || whiteResult.toLowerCase() === "agreed" || whiteResult.toLowerCase() === "repetition" || whiteResult.toLowerCase() === "insufficient")
             {
                 results.push("draw"); 
             }
-            else if(dataFile[i].white.result.toLowerCase() === "checkmated" || dataFile[i].white.result.toLowerCase() === "resigned" || dataFile[i].white.result.toLowerCase() === "timeout")
+            else if(whiteResult.toLowerCase() === "checkmated" || whiteResult.toLowerCase() === "resigned" || whiteResult.toLowerCase() === "timeout")
             {
                 results.push("lose");
             }
         }
 
-        else if(dataFile[i].black.username.toLowerCase() === name.toLowerCase())
+        else if(blackName.toLowerCase() === name.toLowerCase())
         {
-            if(dataFile[i].black.result.toLowerCase() === "win")
+            if(blackResult.toLowerCase() === "win")
                 {
-                    results.push(dataFile[i].black.result);
+                    results.push(blackResult);
                 }
-                else if(dataFile[i].black.result.toLowerCase() === "stalemate" || dataFile[i].black.result.toLowerCase() === "agreed" || dataFile[i].black.result.toLowerCase() === "repetition" || dataFile[i].black.result.toLowerCase() === "insufficient")
+                else if(blackResult.toLowerCase() === "stalemate" || blackResult.toLowerCase() === "agreed" || blackResult.toLowerCase() === "repetition" || blackResult.toLowerCase() === "insufficient")
                 {
                     results.push("draw"); 
                 }
-                else if(dataFile[i].black.result.toLowerCase() === "checkmated" || dataFile[i].black.result.toLowerCase() === "resigned" || dataFile[i].black.result.toLowerCase() === "timeout")
+                else if(blackResult.toLowerCase() === "checkmated" || blackResult.toLowerCase() === "resigned" || blackResult.toLowerCase() === "timeout")
                 {
                     results.push("lose");
                 }
@@ -42,7 +47,7 @@ export function streaks(dataFile,name)
        
     }
 
-    console.log(results);
+   
 
     let tempWins = findWinStreak(results);
     let tempDraws = findDrawStreak(results);

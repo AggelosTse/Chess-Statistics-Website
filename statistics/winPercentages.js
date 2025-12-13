@@ -8,49 +8,55 @@ export function winPercentage(dataFile,name)
     let totalwins = 0;
 
     const finalWinList = [];
-
+    
     for(let i=0;i<dataFile.length;i++) 
     {
-        if(!dataFile[i].white.result || !dataFile[i].black.result) continue
+        const whiteResult = dataFile[i].white.result;
+        const blackResult  = dataFile[i].black.result;
+
+        const whiteName = dataFile[i].white.username;
+        const blackName = dataFile[i].black.username;
+
+        if(!whiteResult || !blackResult) continue
 
 
-        if(dataFile[i].white.username.toLowerCase() === name.toLowerCase())
+        if(whiteName.toLowerCase() === name.toLowerCase())
         {
-            if(dataFile[i].white.result.toLowerCase() === "win")
+            if(whiteResult.toLowerCase() === "win")
             {
-                if(dataFile[i].black.result.toLowerCase() === "checkmated")
+                if(blackResult.toLowerCase() === "checkmated")
                 {
                     wonByCheckmate++;
                     totalwins++;
                 }
-                else if(dataFile[i].black.result.toLowerCase() === "resigned")
+                else if(blackResult.toLowerCase() === "resigned")
                     {
                         wonByResignation++;
                         totalwins++;
                     }
-                else if(dataFile[i].black.result.toLowerCase() === "timeout")
-                        {
-                            wonByTimeOut++;
-                            totalwins++;
-                        }    
+                else if(blackResult.toLowerCase() === "timeout")
+                    {
+                        wonByTimeOut++;
+                        totalwins++;
+                    }    
             }
         }
 
-        else if (dataFile[i].black.username.toLowerCase() === name.toLowerCase())
+        else if (blackName.toLowerCase() === name.toLowerCase())
         {
-            if(dataFile[i].black.result.toLowerCase() === "win")
+            if(blackResult.toLowerCase() === "win")
                 {
-                    if(dataFile[i].white.result.toLowerCase() === "checkmated")
+                    if(whiteResult.toLowerCase() === "checkmated")
                     {
                         wonByCheckmate++;
                         totalwins++;
                     }
-                    else if(dataFile[i].white.result.toLowerCase() === "resigned")
+                    else if(whiteResult.toLowerCase() === "resigned")
                         {
                             wonByResignation++;
                             totalwins++;
                         }
-                    else if(dataFile[i].white.result.toLowerCase() === "timeout")
+                    else if(whiteResult.toLowerCase() === "timeout")
                         {
                              wonByTimeOut++;
                              totalwins++;
@@ -64,22 +70,11 @@ export function winPercentage(dataFile,name)
     {
         return [0,0,0,0,0,0];
     }
-
-    console.log("Wins By Checkmates: \n");
-    console.log(    "Total checkmate wins: " + wonByCheckmate + "\n");
-    console.log(    "Checkmate wins percentage:: " + Math.round((wonByCheckmate/totalwins)*100) + "\n");
+    
 
     finalWinList.push(wonByCheckmate,Math.round((wonByCheckmate/totalwins)*100));
 
-    console.log("Wins By Resignation: \n");
-    console.log(    "Total Resignation wins: " + wonByResignation + "\n");
-    console.log(    "Rrsignation wins percentage:: " + Math.round((wonByResignation/totalwins)*100) + "\n");
-
     finalWinList.push(wonByResignation,Math.round((wonByResignation/totalwins)*100));
-
-    console.log("Wins By timeout: \n");
-    console.log(    "Total timeout wins: " + wonByTimeOut + "\n");
-    console.log(    "Timeout wins percentage:: " + Math.round((wonByTimeOut/totalwins)*100) + "\n");
 
     finalWinList.push(wonByTimeOut,Math.round((wonByTimeOut/totalwins)*100));
 

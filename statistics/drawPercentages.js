@@ -13,24 +13,28 @@ export function drawPercentage(dataFile)
 
     for(let i=0;i<dataFile.length;i++) 
         {
-            if(!dataFile[i].white.result || !dataFile[i].black.result) continue
+            const whiteResult = dataFile[i].white.result;
+            const blackResult = dataFile[i].black.result;
 
-            if(dataFile[i].black.result.toLowerCase() === "stalemate")
+
+            if(!whiteResult || !blackResult) continue
+
+            if(whiteResult.toLowerCase() === "stalemate" || blackResult.toLowerCase() === "stalemate")
             {
                 drawByStalemate++;
                 drawtotal++;
             }
-            else if(dataFile[i].black.result.toLowerCase() === "agreed")
+            else if(whiteResult.toLowerCase() === "agreed" || blackResult.toLowerCase() === "agreed")
             {
                 drawByAgreement++;
                 drawtotal++;
             }
-            else if(dataFile[i].black.result.toLowerCase() === "repetition")
+            else if(whiteResult.toLowerCase() === "repetition" || blackResult.toLowerCase() === "repetition")
                 {
                     drawByRepetition++;
                     drawtotal++;
                 }
-            else if(dataFile[i].black.result.toLowerCase() === "insufficient")
+            else if(whiteResult.toLowerCase() === "insufficient" || blackResult.toLowerCase() === "insufficient")
                 {
                     drawByInsufficient++;
                     drawtotal++;
@@ -43,29 +47,15 @@ export function drawPercentage(dataFile)
         }
 
 
-        console.log("Draws By Stalemates: \n");
-        console.log(    "Total stalemate draws: " + drawByStalemate + "\n");
-        console.log(    "Stalemate draws percentage:: " + Math.round((drawByStalemate/drawtotal)*100) + "\n");
+      
 
-        finalDrawArray.push(drawByStalemate,Math.round((drawByStalemate/drawtotal)*100))
+        finalDrawArray.push(drawByStalemate,Math.round((drawByStalemate/drawtotal)*100));
 
-        console.log("Draws By Agreement: \n");
-        console.log(    "Total agreement draws: " + drawByAgreement + "\n");
-        console.log(    "Agreement draws percentage: " + Math.round((drawByAgreement/drawtotal)*100) + "\n");
+        finalDrawArray.push(drawByAgreement,Math.round((drawByAgreement/drawtotal)*100));
 
-        finalDrawArray.push(drawByAgreement,Math.round((drawByAgreement/drawtotal)*100))
+        finalDrawArray.push(drawByRepetition,Math.round((drawByRepetition/drawtotal)*100));
 
-        console.log("Draws By Repetition: \n");
-        console.log(    "Total repetition draws: " + drawByRepetition + "\n");
-        console.log(    "Repetition draws percentage: " + Math.round((drawByRepetition/drawtotal)*100) + "\n");
-
-        finalDrawArray.push(drawByRepetition,Math.round((drawByRepetition/drawtotal)*100))
-
-        console.log("Draws By Insufficient material: \n");
-        console.log(    "Total Insufficient material draws: " + drawByInsufficient + "\n");
-        console.log(    "Insufficient material draws percentage: " + Math.round((drawByInsufficient/drawtotal)*100) + "\n");
-
-        finalDrawArray.push(drawByInsufficient,Math.round((drawByInsufficient/drawtotal)*100))
+        finalDrawArray.push(drawByInsufficient,Math.round((drawByInsufficient/drawtotal)*100));
 
         return finalDrawArray;
 }

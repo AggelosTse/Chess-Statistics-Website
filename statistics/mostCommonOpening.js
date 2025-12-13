@@ -83,33 +83,27 @@ export function CommonOpenings(dataFile,name) {
     const mostWhite = whiteOpenings.size ? findMostCommon(whiteOpenings) : null;
     const mostBlack = blackOpenings.size ? findMostCommon(blackOpenings) : null;
 
-    console.log('\n--- Most Common Opening Analysis ---');
 
     if (mostWhite) {
         const { count, wins } = mostWhite.data;
         const winrate = count ? (wins / count).toFixed(3)*100 : 'N/A';
-        console.log('Most common opening as White:', mostWhite.opening);
-        console.log('Count:', count);
-        console.log('Winrate:', winrate);
 
         finalOpeningList.push(mostWhite.opening,count,winrate);
 
     } else {
-        console.log('Not enough White games found for opening analysis.');
+       
         finalOpeningList.push("NA",0,0);
     }
 
     if (mostBlack) {
         const { count, wins } = mostBlack.data;
         const winrate = count ? (wins / count).toFixed(3)*100 : 'N/A';
-        console.log('\nMost common opening as Black:', mostBlack.opening);
-        console.log('Count:', count);
-        console.log('Winrate:', winrate);
+     
 
         finalOpeningList.push(mostBlack.opening,count,winrate);
         
     } else {
-        console.log('Not enough Black games found for opening analysis.');
+    
         finalOpeningList.push("NA",0,0);
     }
 

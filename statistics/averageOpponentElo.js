@@ -6,28 +6,33 @@ export function averageOpponentElo(dataFile,name)
 
     for(let i=0;i<dataFile.length;i++)
     {
-        if(!dataFile[i].white.rating || !dataFile[i].black.rating) continue
+        if(!dataFile[i].white.rating || !dataFile[i].black.rating) continue;
+
+        const whiteRating = dataFile[i].white.rating;
+        const blackRating = dataFile[i].black.rating;
+
+        const whiteName = dataFile[i].white.username;
+        const blackName = dataFile[i].black.username;
 
 
-        if(dataFile[i].white.username.toLowerCase() === name.toLowerCase())
+        if(whiteName.toLowerCase() === name.toLowerCase())
         {
-            sum += dataFile[i].black.rating;
+            sum += blackRating;
             pl++;
         }
-        else if (dataFile[i].black.username.toLowerCase() === name.toLowerCase())
+        else if (blackName.toLowerCase() === name.toLowerCase())
         {
-            sum += dataFile[i].white.rating;
+            sum += whiteName;
             pl++
         }
        
     }
     if(pl === 0)
     {
-        console.log("No opponents found. \n");
-        return;
+        return 0;
     }
-    let average = Math.round(sum/pl);
     
-    console.log("Average opponent elo: " + average + "\n");
+    let average = Math.round(sum/pl);       //TO ALLAZO SE MEDIAN ANTI GIA MEAN
+    
     return average;
 }

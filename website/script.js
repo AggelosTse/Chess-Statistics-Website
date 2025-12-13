@@ -54,7 +54,8 @@ function showSubOptions() {
 async function handleSubmit(event) {
     event.preventDefault();
 
-    const name = document.getElementById("name").value;
+    let name = document.getElementById("name").value;
+    name = name.trim();
     const mainOption = document.getElementById("mainOption").value;
     const subSelect = document.getElementById("subSelect");
     let subOption = subSelect ? subSelect.value : "";

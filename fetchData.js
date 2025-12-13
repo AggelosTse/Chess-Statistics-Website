@@ -1,4 +1,5 @@
-import { getDaysData,getMonthsData,getYearsData } from "./getUserDataChoise.js";
+import { getDaysData } from "./daysData.js";
+import { getMonthsData } from "./monthsData.js";
 
 export async function getData(name,mainOption,subOption)
 {
