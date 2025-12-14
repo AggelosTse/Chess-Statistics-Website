@@ -30,7 +30,12 @@ function showSubOptions() {
         options = [1, 2, 3, 6, 9, 12];
     }
     else if (mainOption === "Years") {
-        options = [1, 2, 3, 5, 10];
+        const currentTime = new Date();
+        const currentyear = currentTime.getFullYear();
+        for(let i=0;i<10;i++)
+        {
+            options.push(currentyear - i);
+        }
     }
 
     options.forEach(value => {

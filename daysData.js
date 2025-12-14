@@ -30,11 +30,7 @@ function getDifferentDays(allGames,currentTime ,dayoption)
 
 
 export async function getDaysData(name, subOption)      //TA FTIAXNO ME TON TROPO PO EMATHA, SETDATE
-{
-    let responses;
-
-    
-    
+{ 
     const currentTime = new Date();
 
     let startDate = new Date(currentTime);
@@ -87,8 +83,5 @@ export async function getDaysData(name, subOption)      //TA FTIAXNO ME TON TROP
 }
 
 
-export async function getYearsData(subOption)
-{
-    
-}
+
 

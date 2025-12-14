@@ -1,5 +1,7 @@
 import { getDaysData } from "./daysData.js";
 import { getMonthsData } from "./monthsData.js";
+import { getYearsData } from "./yearsData.js";
+
 
 export async function getData(name,mainOption,subOption)
 {
