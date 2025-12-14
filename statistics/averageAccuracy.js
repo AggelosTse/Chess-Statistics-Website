@@ -15,6 +15,12 @@ export function averageAccuracy(dataFile,name)
 
     for(let i=0; i<dataFile.length;i++)
     {
+
+
+        if (!dataFile[i].accuracies) {
+            continue; // Skip the game entirely if no accuracy data is present
+        }
+
         const whiteAccuracy = dataFile[i].accuracies.white;
         const blackAccuracy = dataFile[i].accuracies.black;
 
@@ -27,7 +33,7 @@ export function averageAccuracy(dataFile,name)
         if(whiteName.toLowerCase() === name.toLowerCase())
         {
 
-            if(!dataFile[i].accuracies || !whiteAccuracy) continue;
+            if(whiteAccuracy === null || whiteAccuracy === undefined) continue;
             
             generalSum += whiteAccuracy;
             generalPL++;
@@ -37,7 +43,7 @@ export function averageAccuracy(dataFile,name)
         }
         else if(blackName.toLowerCase() === name.toLowerCase())
         {
-            if(!dataFile[i].accuracies || !blackAccuracy) continue;
+            if(whiteAccuracy === null || blackAccuracy === undefined) continue;
 
             generalSum += blackAccuracy;
             generalPL++;

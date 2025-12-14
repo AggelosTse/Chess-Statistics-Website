@@ -29,7 +29,7 @@ function getDifferentDays(allGames,currentTime ,dayoption)
 }
 
 
-export async function getDaysData(name, subOption)
+export async function getDaysData(name, subOption)      //TA FTIAXNO ME TON TROPO PO EMATHA, SETDATE
 {
     let responses;
 
@@ -37,36 +37,32 @@ export async function getDaysData(name, subOption)
     
     const currentTime = new Date();
 
-    const currentMonth = currentTime.getMonth() + 1;
-    const currentYear = currentTime.getFullYear();
+    let startDate = new Date(currentTime);
+    startDate.setMonth(startDate.getMonth()- 3);
+    
+    let fullyearlist = [];
 
-    if(currentMonth === 1)      //january
+    for(let i=0;i<3;i++)
     {
-             responses = await Promise.all([
-            fetch(`https://api.chess.com/pub/player/${name}/games/${currentYear}/01`),
-            fetch(`https://api.chess.com/pub/player/${name}/games/${currentYear-1}/12`)
-            
-            
-          ]);
-    }
-    else if(currentMonth !== 1)
-    {
+        const fetchDate = new Date(startDate);
+        fetchDate.setMonth(startDate.getMonth() + i);
 
-        const month = padMonth(currentMonth)
-        const prev = currentMonth - 1;
-        const previousMonth = padMonth(prev);
+        let month = fetchDate.getMonth() + 1;      //apo arxiko mina kai meta
+        month = padMonth(month);
 
-             responses = await Promise.all([
-            fetch(`https://api.chess.com/pub/player/${name}/games/${currentYear}/${month}`),
-            fetch(`https://api.chess.com/pub/player/${name}/games/${currentYear}/${previousMonth}`)
-        
-        
-      ]);
+        const year = fetchDate.getFullYear();           ///xronos paliou mina
+
+        const url = `https://api.chess.com/pub/player/${name}/games/${year}/${month}`;
+
+        fullyearlist.push(
+            fetch(url)
+                .then(response => response.ok ? response.json() : { games: [] })
+                // Handle network errors
+                .catch(error => { console.error(`Fetch error for ${url}:`, error); return { games: [] }; })
+        );
     }
 
-
-
-    const data = await Promise.all(responses.map(responses => responses.json()));
+    const data = await Promise.all(fullyearlist);
     let allGames = data.flatMap(month => month.games || []);
     
     allGames = allGames.sort((a, b) => b.end_time - a.end_time);
