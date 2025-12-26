@@ -15,7 +15,7 @@ export async function makejson(accuracy,total,averageOpponElo,highestOppElo,winP
 
         "wonByCheckMate": winPerc[0],
         "wonByCheckmatePercentage" : winPerc[1],
-        "wonByResignation": winPerc[2],
+        "wonByResignation": winPerc[2], 
         "wonByResignationPercentage" : winPerc[3],
         "wonByTimeout" : winPerc[4],
         "wonByTimeoutPercentage": winPerc[5],

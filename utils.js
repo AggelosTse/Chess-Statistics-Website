@@ -40,9 +40,9 @@ export async function nextPhase(name,mainOption,subOption)
 
     const averagMove = averageMoves(data,name); //value 
 
-    const maxPlayerElo = maxelo(data,name);
+    const maxPlayerElo = maxelo(data,name); //value
 
-    const allelo = allElos(data,name);
+    const allelo = allElos(data,name);  //list of elo (for the graph)
 
     const results = await makejson(accuracy,total,averageOpponElo,highestOppElo,winPerc,drawPerc,losePerc,commonOp,streak,averagMove,maxPlayerElo,allelo);
 
