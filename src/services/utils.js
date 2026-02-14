@@ -1,51 +1,65 @@
-import { getData} from './fetchData.js';
-import { makejson} from './resultToJson.js';
-import {averageAccuracy} from '../calculateStats/averageAccuracy.js';
-import { totalGames } from '../calculateStats/totalGamesPlayed.js';
-import { averageOpponentElo } from '../calculateStats/averageOpponentElo.js';
-import { winPercentage } from '../calculateStats/winPercentages.js';
-import { drawPercentage } from '../calculateStats/drawPercentages.js';
-import { losePercentage } from '../calculateStats/losePercentages.js';
-import { CommonOpenings } from '../calculateStats/mostCommonOpening.js';
-import { streaks } from '../calculateStats/streak.js';
-import { averageMoves } from '../calculateStats/averageTotalMoves.js';
-import { highestOpponentElo } from '../calculateStats/highestOpponentElo.js';
-import { maxelo } from '../calculateStats/maxPlayerElo.js';
-import { allElos } from '../calculateStats/allPlayerELo.js';
+import { getData } from "./fetchData.js";
+import { makejson } from "./resultToJson.js";
+import { averageAccuracy } from "../calculateStats/averageAccuracy.js";
+import { totalGames } from "../calculateStats/totalGamesPlayed.js";
+import { averageOpponentElo } from "../calculateStats/averageOpponentElo.js";
+import { winPercentage } from "../calculateStats/winPercentages.js";
+import { drawPercentage } from "../calculateStats/drawPercentages.js";
+import { losePercentage } from "../calculateStats/losePercentages.js";
+import { CommonOpenings } from "../calculateStats/mostCommonOpening.js";
+import { streaks } from "../calculateStats/streak.js";
+import { averageMoves } from "../calculateStats/averageTotalMoves.js";
+import { highestOpponentElo } from "../calculateStats/highestOpponentElo.js";
+import { maxelo } from "../calculateStats/maxPlayerElo.js";
+import { allElos } from "../calculateStats/allPlayerELo.js";
 
-
-export async function nextPhase(name,mainOption,subOption)
-{
+export async function nextPhase(name, mainOption, subOption) {
+  try {
     let data = [];
 
-    data = await getData(name,mainOption,subOption);
+    data = await getData(name, mainOption, subOption);
 
-    const accuracy = averageAccuracy(data,name);            //list, 1st element general,2nd white, 3rd black
-    
-    const total = totalGames(data);                         //number
+    const accuracy = averageAccuracy(data, name); //list, 1st element general,2nd white, 3rd black
 
-    const averageOpponElo = averageOpponentElo(data,name);  //number
+    const total = totalGames(data); //number
 
-    const highestOppElo = highestOpponentElo(data,name);    //list, 1st element elo played, 2nd element elo won
+    const averageOpponElo = averageOpponentElo(data, name); //number
 
-    const winPerc = winPercentage(data,name);  //list, diades apo stixia, tin mia arithmos tin alli pososto
+    const highestOppElo = highestOpponentElo(data, name); //list, 1st element elo played, 2nd element elo won
 
-    const drawPerc = drawPercentage(data);      //list, diades apo stixia, tin mia arithmos tin alli pososto
+    const winPerc = winPercentage(data, name); //list, diades apo stixia, tin mia arithmos tin alli pososto
 
-    const losePerc = losePercentage(data,name); //list, diades apo stixia, tin mia arithmos tin alli pososto
+    const drawPerc = drawPercentage(data); //list, diades apo stixia, tin mia arithmos tin alli pososto
 
-    const commonOp = CommonOpenings(data,name);  //list, 1st element NA h mia tripleta apo stixia
+    const losePerc = losePercentage(data, name); //list, diades apo stixia, tin mia arithmos tin alli pososto
 
-    const streak = streaks(data,name);      //list, niki-isopalia-itta
+    const commonOp = CommonOpenings(data, name); //list, 1st element NA h mia tripleta apo stixia
 
-    const averagMove = averageMoves(data,name); //value 
+    const streak = streaks(data, name); //list, niki-isopalia-itta
 
-    const maxPlayerElo = maxelo(data,name); //value
+    const averagMove = averageMoves(data, name); //value
 
-    const allelo = allElos(data,name);  //list of elo (for the graph)
+    const maxPlayerElo = maxelo(data, name); //value
 
-    const results = await makejson(accuracy,total,averageOpponElo,highestOppElo,winPerc,drawPerc,losePerc,commonOp,streak,averagMove,maxPlayerElo,allelo);
+    const allelo = allElos(data, name); //list of elo (for the graph)
+
+    const results = await makejson(
+      accuracy,
+      total,
+      averageOpponElo,
+      highestOppElo,
+      winPerc,
+      drawPerc,
+      losePerc,
+      commonOp,
+      streak,
+      averagMove,
+      maxPlayerElo,
+      allelo
+    );
 
     return results;
-
+  } catch (error) {
+    throw error;
+  }
 }

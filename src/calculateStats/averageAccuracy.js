@@ -1,81 +1,60 @@
-export function averageAccuracy(dataFile,name)
-{
+export function averageAccuracy(dataFile, name) {
+  let generalSum = 0;
+  let whiteSum = 0;
+  let blackSum = 0;
 
-    if (!Array.isArray(dataFile)) return [0,0,0];    //checks if datafile is a array
+  let generalPL = 0;
+  let whitePL = 0;
+  let blackPL = 0;
 
-    let generalSum = 0;
-    let whiteSum = 0;
-    let blackSum = 0;
+  const accuracyArray = [];
 
-    let generalPL = 0;
-    let whitePL = 0;
-    let blackPL = 0;
-  
-    const accuracyArray = [];
+  const searchName = name.toLowerCase();
 
-    for(let i=0; i<dataFile.length;i++)
-    {
+  for (let i = 0; i < dataFile.length; i++) {
+    const whiteAccuracy = dataFile[i]?.accuracies?.white;
+    const blackAccuracy = dataFile[i]?.accuracies?.black;
 
+    const whiteName = dataFile[i]?.white?.username?.toLowerCase();
+    const blackName = dataFile[i]?.black?.username?.toLowerCase();
 
-        if (!dataFile[i].accuracies) {
-            continue; // Skip the game entirely if no accuracy data is present
-        }
+    if (whiteName === searchName) {
+      if (whiteAccuracy == null) continue;
 
-        const whiteAccuracy = dataFile[i].accuracies.white;
-        const blackAccuracy = dataFile[i].accuracies.black;
+      generalSum += whiteAccuracy;
+      generalPL++;
 
-        const whiteName = dataFile[i].white.username;
-        const blackName = dataFile[i].black.username; 
-        
-        
+      whiteSum += whiteAccuracy;
+      whitePL++;
 
+      continue;
+    } else if (blackName === searchName) {
+      if (blackAccuracy == null) continue;
 
-        if(whiteName.toLowerCase() === name.toLowerCase())
-        {
+      generalSum += blackAccuracy;
+      generalPL++;
 
-            if(whiteAccuracy === null || whiteAccuracy === undefined) continue;
-            
-            generalSum += whiteAccuracy;
-            generalPL++;
-
-            whiteSum += whiteAccuracy;
-            whitePL++;
-        }
-        else if(blackName.toLowerCase() === name.toLowerCase())
-        {
-            if(blackAccuracy === null || blackAccuracy === undefined) continue;
-
-            generalSum += blackAccuracy;
-            generalPL++;
-
-            blackSum += blackAccuracy;
-            blackPL++;
-        }
+      blackSum += blackAccuracy;
+      blackPL++;
     }
-    if (generalPL === 0) {
-        return [0,0,0];
-    }
+  }
+  if (generalPL === 0) {
+    return [0, 0, 0];
+  }
 
-    accuracyArray.push(Math.floor(generalSum / generalPL));
+  accuracyArray.push(Math.floor(generalSum / generalPL));
 
-    if (whitePL > 0)
-    {
-        accuracyArray.push(Math.floor(whiteSum / whitePL));
-    }
-    else 
-    {
-        accuracyArray.push(0);
-    }
+  if (whitePL > 0) {
+    accuracyArray.push(Math.floor(whiteSum / whitePL));
+  } else {
+    accuracyArray.push(0);
+  }
 
-    if (blackPL > 0)
-    {
-        accuracyArray.push(Math.floor(blackSum / blackPL));
-    }
-    else
-    {
-        accuracyArray.push(0);
-   
-    }
+  if (blackPL > 0) {
+    accuracyArray.push(Math.floor(blackSum / blackPL));
+  } else {
+    accuracyArray.push(0);
+  }
 
-    return accuracyArray;
+  return accuracyArray;
 }

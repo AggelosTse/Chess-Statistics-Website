@@ -1,6 +1,5 @@
 export async function getDaysData(name, subOption) {
-    const subOptionList = [1, 3, 7, 14, 21, 30];
-    if (!subOptionList.includes(subOption)) return [];      //checks if the chosen suboption is valid
+    try{
 
     const now = new Date();     //storing the date now
 
@@ -21,9 +20,8 @@ export async function getDaysData(name, subOption) {
         fetchPromises.push(
             fetch(url)
                 .then(res => res.ok ? res.json() : { games: [] })
-                .catch(err => {
-                    console.error(`API Error for ${month}/${year}:`, err);
-                    return { games: [] };
+                .catch(() => {
+                    throw new Error("fetching data");
                 })                                  //pushing the response of the server in the fetchpromises list
         );
 
@@ -38,4 +36,7 @@ export async function getDaysData(name, subOption) {
     return allGames
         .filter(game => game.end_time >= priorDateTimestamp)
         .sort((a, b) => b.end_time - a.end_time);
+}catch(error){
+    throw error;
+}
 }

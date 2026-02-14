@@ -1,4 +1,4 @@
-let eloChart = null;
+
 
 function resetAll() {
     document.getElementById("subOptionsContainer").innerHTML = "";
@@ -46,6 +46,7 @@ function showSubOptions() {
 }
 
 async function handleSubmit(event) {
+    
     event.preventDefault();
     const name = document.getElementById("name").value.trim();
     const mainOption = document.getElementById("mainOption").value;
@@ -70,7 +71,7 @@ async function handleSubmit(event) {
         })
     
     if(!response.ok){
-        console.error("failed");
+        console.error("failed"); 
     }
     const data = response.json();
     
@@ -141,4 +142,5 @@ function displayOtherStats(results) {
     });
 }
 
+let eloChart = null;
 document.getElementById("mainOption").addEventListener("change", showSubOptions);

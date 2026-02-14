@@ -1,19 +1,26 @@
-export function allElos(dataFile,name)
-{
-    let elolist = [];
+export function allElos(dataFile, name) {
+  let elolist = [];
 
-    for(let i=0;i<dataFile.length;i++)
-    {
-        if(dataFile[i].white.username.toLowerCase() === name.toLowerCase())
-        {
-            elolist.push(dataFile[i].white.rating);
-        }
-       else if(dataFile[i].black.username.toLowerCase() === name.toLowerCase())
-        {
-            elolist.push(dataFile[i].black.rating);
-        }
+  const searchName = name.toLowerCase();
 
-   
-         } 
-    return elolist;
+  for (let i = 0; i < dataFile.length; i++) {
+    // ? checks if its undefined, if it is, goes to next iteration
+    const whiteUsername = dataFile[i]?.white?.username?.toLowerCase();
+    const blackUsername = dataFile[i]?.black?.username?.toLowerCase();
+
+    const whiteRating = dataFile[i].white?.rating;
+    const blackRating = dataFile[i].black?.rating;
+
+    if (whiteUsername === searchName) {
+      if (!whiteRating) continue;
+
+      elolist.push(whiteRating);
+      continue;
+    } else if (blackUsername === searchName) {
+      if (!blackRating) continue;
+
+      elolist.push(blackRating);
+    }
+  }
+  return elolist;
 }

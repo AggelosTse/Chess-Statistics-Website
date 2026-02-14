@@ -1,7 +1,6 @@
 
 export async function getMonthsData(name, subOption) {
-    const validOptions = [1, 2, 3, 6, 9, 12];
-    if (!validOptions.includes(subOption)) return [];       //checks for valid user input
+    try{
 
     const now = new Date();         //gets the current time
     
@@ -24,7 +23,9 @@ export async function getMonthsData(name, subOption) {
         fetchPromises.push(             //keeps the responses in fetchpromises list
             fetch(url)
                 .then(res => res.ok ? res.json() : { games: [] })
-                .catch(() => ({ games: [] }))
+                .catch(() => {
+                    throw new Error("fetching data");
+                })  
         );
 
         iterateDate.setMonth(iterateDate.getMonth() + 1);
@@ -37,4 +38,7 @@ export async function getMonthsData(name, subOption) {
         .flatMap(m => m.games || [])
         .filter(game => game.end_time >= cutoffTimestamp)
         .sort((a, b) => b.end_time - a.end_time);
+}catch(error){
+    throw error;
+}
 }

@@ -1,14 +1,11 @@
 export async function getYearsData(name, subOption) {
- 
-    const yearToFetch = parseInt(subOption);
-    if (!yearToFetch || !name) return [];           //check for valid input
 
     const now = new Date();                     //date calculations 
     const currentYear = now.getUTCFullYear();
     const currentMonth = now.getUTCMonth() + 1; // 1-indexed
 
 
-    const maxMonth = (yearToFetch === currentYear) ? currentMonth : 12;     //if uses wants this year, 
+    const maxMonth = (yearToFetch === currentYear) ? currentMonth : 12;     //if user wants this year, 
     //the max Month should be the current month. Else, take the whole 12 months
 
     const fetchPromises = [];
@@ -21,8 +18,7 @@ export async function getYearsData(name, subOption) {
             fetch(url)
                 .then(res => res.ok ? res.json() : { games: [] })
                 .catch(err => {
-                    console.warn(`Skipping ${month}/${yearToFetch}:`, err);
-                    return { games: [] };
+                    throw new Error("fetching data");
                 })
         );
     }

@@ -1,0 +1,13 @@
+{
+  "name": "chess-statistics-website",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "A website that fetches data from the Chess.com public API, calculates various statistics, and displays them on the screen.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

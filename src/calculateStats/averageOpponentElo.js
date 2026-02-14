@@ -3,27 +3,30 @@ export function averageOpponentElo(dataFile,name)
     let pl = 0;
     let sum = 0;
     
+    const searchName = name.toLowerCase();
 
     for(let i=0;i<dataFile.length;i++)
     {
-        if(!dataFile[i].white.rating || !dataFile[i].black.rating) continue;
 
-        const whiteRating = dataFile[i].white.rating;
-        const blackRating = dataFile[i].black.rating;
-
-        const whiteName = dataFile[i].white.username;
-        const blackName = dataFile[i].black.username;
+        const whiteName = dataFile[i]?.white?.username?.toLowerCase();
+        const blackName = dataFile[i]?.black?.username?.toLowerCase();
 
 
-        if(whiteName.toLowerCase() === name.toLowerCase())
+        if(whiteName === searchName)
         {
+            const blackRating = dataFile[i]?.black?.rating;
+            if(!blackRating) continue;
             sum += blackRating;
             pl++;
+            continue;
         }
-        else if (blackName.toLowerCase() === name.toLowerCase())
+        else if (blackName === searchName)
         {
+            const whiteRating = dataFile[i]?.white?.rating;
+            if(!whiteRating) continue;
             sum += whiteRating;
             pl++
+
         }
        
     }
