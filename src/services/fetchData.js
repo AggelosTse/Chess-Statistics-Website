@@ -1,6 +1,6 @@
-import { getDaysData } from "./dataFetching/daysData.js";
-import { getMonthsData } from "./dataFetching/monthsData.js";
-import { getYearsData } from "./dataFetching/yearsData.js";
+import { getDaysData } from "../dataFetching/daysData.js";
+import { getMonthsData } from "../dataFetching/monthsData.js";
+import { getYearsData } from "../dataFetching/yearsData.js";
 
 
 export async function getData(name,mainOption,subOption)

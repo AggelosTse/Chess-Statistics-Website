@@ -1,5 +1,3 @@
-import { nextPhase } from '../utils.js';
-
 let eloChart = null;
 
 function resetAll() {
@@ -55,7 +53,28 @@ async function handleSubmit(event) {
 
     if (!name) return alert("Enter username");
 
-    const results = await nextPhase(name, mainOption, subOption);
+    const userInfo = {
+        username: name,
+        main: mainOption,
+        sub: subOption
+    };
+
+    const response = await fetch("/statistics",
+        {
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify(userInfo)
+        })
+    
+    if(!response.ok){
+        console.error("failed");
+    }
+    const data = response.json();
+    
+
     
     const container = document.getElementById("resultsContainer");
     container.style.display = "block";

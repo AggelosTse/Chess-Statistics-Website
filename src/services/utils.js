@@ -1,17 +1,17 @@
 import { getData} from './fetchData.js';
 import { makejson} from './resultToJson.js';
-import {averageAccuracy} from './statistics/averageAccuracy.js';
-import { totalGames } from './statistics/totalGamesPlayed.js';
-import { averageOpponentElo } from './statistics/averageOpponentElo.js';
-import { winPercentage } from './statistics/winPercentages.js';
-import { drawPercentage } from './statistics/drawPercentages.js';
-import { losePercentage } from './statistics/losePercentages.js';
-import { CommonOpenings } from './statistics/mostCommonOpening.js';
-import { streaks } from './statistics/streak.js';
-import { averageMoves } from './statistics/averageTotalMoves.js';
-import { highestOpponentElo } from './statistics/highestOpponentElo.js';
-import { maxelo } from './statistics/maxPlayerElo.js';
-import { allElos } from './statistics/allPlayerELo.js';
+import {averageAccuracy} from '../calculateStats/averageAccuracy.js';
+import { totalGames } from '../calculateStats/totalGamesPlayed.js';
+import { averageOpponentElo } from '../calculateStats/averageOpponentElo.js';
+import { winPercentage } from '../calculateStats/winPercentages.js';
+import { drawPercentage } from '../calculateStats/drawPercentages.js';
+import { losePercentage } from '../calculateStats/losePercentages.js';
+import { CommonOpenings } from '../calculateStats/mostCommonOpening.js';
+import { streaks } from '../calculateStats/streak.js';
+import { averageMoves } from '../calculateStats/averageTotalMoves.js';
+import { highestOpponentElo } from '../calculateStats/highestOpponentElo.js';
+import { maxelo } from '../calculateStats/maxPlayerElo.js';
+import { allElos } from '../calculateStats/allPlayerELo.js';
 
 
 export async function nextPhase(name,mainOption,subOption)
