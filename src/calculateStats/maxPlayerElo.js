@@ -1,19 +1,29 @@
-export function maxelo(dataFile, name)
-{
-    let elolist = [];
+export function maxelo(dataFile, name) {
+  const searchName = name.toLowerCase();
 
-    for(let i=0;i<dataFile.length;i++)
-    {
-        if(dataFile[i].white.username.toLowerCase() === name.toLowerCase())
-        {
-            elolist.push(dataFile[i].white.rating);
-        }
-       else if(dataFile[i].black.username.toLowerCase() === name.toLowerCase())
-        {
-            elolist.push(dataFile[i].black.rating);
-        }
-        
+  let max = -1;
 
-        return Math.max(0, ...elolist);
+  for (let i = 0; i < dataFile.length; i++) {
+    let result;
+
+    const whiteUsername = dataFile[i]?.white?.username?.toLowerCase();
+    const blackUsername = dataFile[i]?.black?.username?.toLowerCase();
+
+    const whiteRating = dataFile[i]?.white?.rating;
+    const blackRating = dataFile[i]?.black?.rating;
+
+    if (!whiteRating || !blackRating) continue;
+
+    if (whiteUsername === searchName) {
+      result = whiteRating;
+    } else if (blackUsername === searchName) {
+      result = blackRating;
+    } else {
+      continue;
     }
+    if (result > max) {
+      max = result;
+    }
+  }
+  return max;
 }

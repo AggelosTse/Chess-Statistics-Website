@@ -1,52 +1,38 @@
+export function highestOpponentElo(dataFile, name) {
+  let listOfHighestElo = [];
+  let listOfHighestEloWon = [];
 
-export function highestOpponentElo(dataFile,name)
-{
+  const highestopplist = [];
 
-    if (!Array.isArray(dataFile)) return [0,0];
-    
+  const searchName = name.toLowerCase();
 
-    let listOfHighestElo = [];
-    let listOfHighestEloWon = [];
+  for (let i = 0; i < dataFile.length; i++) {
+    const whiteResult = dataFile[i]?.white?.result;
+    const blackResult = dataFile[i]?.black?.result;
 
-    const highestopplist = [];
+    const whiteRating = dataFile[i]?.white?.rating;
+    const blackRating = dataFile[i]?.black?.rating;
 
-    for(let i=0;i<dataFile.length;i++)
-    {
+    const whiteName = dataFile[i]?.white?.username?.toLowerCase();
+    const blackName = dataFile[i]?.black?.username?.toLowerCase();
 
-        if(!dataFile[i].white || !dataFile[i].black) continue;
-
-        const whiteResult = dataFile[i].white.result;
-        const blackResult = dataFile[i].black.result;
-    
-        const whiteRating = dataFile[i].white.rating;
-        const blackRating = dataFile[i].black.rating;
-    
-        const whiteName = dataFile[i].white.username;
-        const blackName = dataFile[i].black.username;
-
-
-        if(whiteName.toLowerCase() === name.toLowerCase())
-        {
-            if(whiteResult === "win")
-            {
-                listOfHighestEloWon.push(blackRating);   
-            }
-            listOfHighestElo.push(blackRating);  
-            
-        }
-        else if(blackName.toLowerCase() === name.toLowerCase())
-            {
-                if(blackResult === "win")
-                {
-                    listOfHighestEloWon.push(whiteRating);   
-                }
-                listOfHighestElo.push(whiteRating);  
-                
-            }
-            
+    if (whiteName === searchName) {
+      if (!whiteResult || !blackRating) continue;
+      if (whiteResult === "win") {
+        listOfHighestEloWon.push(blackRating);
+      }
+      listOfHighestElo.push(blackRating);
+    } else if (blackName === searchName) {
+      if (!blackResult || !whiteRating) continue;
+      if (blackResult === "win") {
+        listOfHighestEloWon.push(whiteRating);
+      }
+      listOfHighestElo.push(whiteRating);
     }
-    
-   
-    highestopplist.push(Math.max(0, ...listOfHighestElo),Math.max(0, ...listOfHighestEloWon));
-    return highestopplist;
+  }
+
+  const maxFaced = listOfHighestElo.reduce((a, b) => Math.max(a, b), 0);
+  const maxWon = listOfHighestEloWon.reduce((a, b) => Math.max(a, b), 0);
+
+  return [maxFaced, maxWon];
 }
