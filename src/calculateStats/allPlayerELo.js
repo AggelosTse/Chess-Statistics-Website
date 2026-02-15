@@ -15,7 +15,6 @@ export function allElos(dataFile, name) {
       if (!whiteRating) continue;
 
       elolist.push(whiteRating);
-      continue;
     } else if (blackUsername === searchName) {
       if (!blackRating) continue;
 

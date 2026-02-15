@@ -11,7 +11,6 @@ export function averageOpponentElo(dataFile, name) {
       const blackRating = dataFile[i]?.black?.rating;
       if (!blackRating) continue;
       opponentElos.push(blackRating);
-      continue;
     } else if (blackName === searchName) {
       const whiteRating = dataFile[i]?.white?.rating;
       if (!whiteRating) continue;

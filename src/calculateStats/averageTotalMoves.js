@@ -1,71 +1,45 @@
+export function averageMoves(dataFile, name) {
+  let listOfTotalMoves = [];
+  const searchName = name.toLowerCase();
+  const moveRegex =
+    /[KQRNB]?[a-h]?[1-8]?x?[a-h][1-8](?:=?[QRNB])?[+#]?|O-O(?:-O)?/g;
+  for (let i = 0; i < dataFile.length; i++) {
+    const whiteName = dataFile[i]?.white?.username?.toLowerCase();
+    const blackName = dataFile[i]?.black?.username?.toLowerCase();
 
-export function averageMoves(dataFile,name)
-{
-    let sumWhiteMoves = 0;
-    let sumBlackMoves = 0;
+    if (!dataFile[i].pgn) continue;
 
-    let listOfTotalMoves = [];
+    const movesOnly = dataFile[i]?.pgn
 
-    const moveRegex = /[KQRNB]?[a-h]?[1-8]?[x-]?[a-h][1-8](?:=[QRNB])?|O-O(?:-O)?/g;
+      .replace(/\[.*?\]/gs, "") // Remove headers
+      .replace(/\{.*?\}|\(.*?\)|\$\d+/g, "") // Remove comments and variations
+      .replace(/\d+\.(\.\.)?/g, "") // Remove move numbers
+      .replace(/\s*(1-0|0-1|1\/2-1\/2)\s*/g, "")
+      .trim();
 
-    for(let i=0;i<dataFile.length;i++)
-    {
+    const moves = movesOnly.match(moveRegex);
 
-        const whiteName = dataFile[i].white.username;
-        const blackName = dataFile[i].black.username;
+    if (!moves) continue;
 
-
-        const movesOnly = dataFile[i].pgn
-
-            .replace(/\[.*?\]/gs, '')              // Remove headers
-            .replace(/\{.*?\}|\(.*?\)|\$\d+/g, '') // Remove comments and variations
-            .replace(/\d+\.(\.\.)?/g, '')          // Remove move numbers
-            .replace(/\s*[10]\s*-\s*[10]\s*/g, '') // Remove results
-            .trim();
-
-
-        const moves = movesOnly.match(moveRegex);
-
-        if(!moves) continue;
-
-        if(whiteName.toLowerCase() === name.toLowerCase())
-        {
-            for(let j=0;j<moves.length;j+=2)
-            {
-                sumWhiteMoves++;
-                
-            }
-            listOfTotalMoves.push(sumWhiteMoves);
-            sumWhiteMoves = 0;
-        }
-        else if(blackName.toLowerCase() === name.toLowerCase())
-        {
-            for(let j=1;j<moves.length;j+=2)
-                {
-                    sumBlackMoves++;
-                }
-                listOfTotalMoves.push(sumBlackMoves);
-                sumBlackMoves = 0;
-        }
-        
+    if (whiteName === searchName) {
+      listOfTotalMoves.push(Math.ceil(moves.length / 2));
+    } else if (blackName === searchName) {
+      listOfTotalMoves.push(Math.floor(moves.length / 2));
     }
+  }
 
-   
-    listOfTotalMoves.sort((a,b) => a - b);
-    
+  if (listOfTotalMoves.length === 0) return "0";
 
-    const mid = Math.floor(listOfTotalMoves.length / 2);
-    let median;
-    
-    if (listOfTotalMoves.length % 2 === 0) {
-  
-      median = (listOfTotalMoves[mid - 1] + listOfTotalMoves[mid]) / 2;
-    } else {
-     
-      median = listOfTotalMoves[mid];
-    }
+  listOfTotalMoves.sort((a, b) => a - b);
 
+  const mid = Math.floor(listOfTotalMoves.length / 2);
+  let median;
 
-    return median.toFixed(0);
+  if (listOfTotalMoves.length % 2 === 0) {
+    median = (listOfTotalMoves[mid - 1] + listOfTotalMoves[mid]) / 2;
+  } else {
+    median = listOfTotalMoves[mid];
+  }
+
+  return median.toFixed(0);
 }
-

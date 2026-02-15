@@ -26,8 +26,6 @@ export function averageAccuracy(dataFile, name) {
 
       whiteSum += whiteAccuracy;
       whitePL++;
-
-      continue;
     } else if (blackName === searchName) {
       if (blackAccuracy == null) continue;
 
