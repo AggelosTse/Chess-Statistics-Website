@@ -1,111 +1,56 @@
+export function CommonOpenings(dataFile, name) {
+    if (!dataFile || !name) return ["NA", 0, 0, "NA", 0, 0];
 
-export function CommonOpenings(dataFile,name) {
-    
-    const usernameLower = name.toLowerCase();
+    const searchName = name.toLowerCase();
+    const whiteMap = new Map();
+    const blackMap = new Map();
 
-    const finalOpeningList = [];
+    const moveRegex = /[KQRNB]?[a-h]?[1-8]?x?[a-h][1-8](?:=[QRNB])?[+#]?|O-O(?:-O)?/g;
 
-    // Maps to count openings and wins/losses
-    const whiteOpenings = new Map(); // key: opening string, value: { count, wins, draws, losses }
-    const blackOpenings = new Map();
+    for (let i = 0; i < dataFile.length; i++) {
+        const game = dataFile[i];
+        const pgn = game?.pgn;
+        if (!pgn) continue;
 
-    // Regex to match moves (simplified but works for standard algebraic notation)
-    const moveRegex = /[KQRNB]?[a-h]?[1-8]?[x-]?[a-h][1-8](?:=[QRNB])?|O-O(?:-O)?/g;
-
-    for (const game of dataFile) {
-        if (!game.pgn) continue;
-
-        // Clean PGN: remove headers, comments, move numbers, result markers
-        const movesOnly = game.pgn
-            .replace(/\[.*?\]/gs, '')              // Remove headers
-            .replace(/\{.*?\}|\(.*?\)|\$\d+/g, '') // Remove comments and variations
-            .replace(/\d+\.(\.\.)?/g, '')          // Remove move numbers
-            .replace(/\s*[10]\s*-\s*[10]\s*/g, '') // Remove results
-            .trim();
-
+        const moveStart = pgn.lastIndexOf(']') + 1;
+        const movesOnly = pgn.slice(moveStart);
         const moves = movesOnly.match(moveRegex);
-        if (!moves || moves.length < 4) continue; // Need at least 4 half-moves
 
-        // Helper function to normalize result
-        const normalizeResult = (res) => {
-            res = res.toLowerCase();
-            if (res === 'win') return 'win';
-            else if (['stalemate', 'agreed', 'repetition', 'insufficient', 'draw'].includes(res)) return 'draw';
-            else return 'lose';
-        };
+        if (!moves || moves.length < 4) continue;
 
-        // --- White analysis ---
-        if (game.white.username.toLowerCase() === usernameLower) {
-            const opening = moves.slice(0, 4).join(' ');
-            const result = normalizeResult(game.white.result);
+        const isWhite = game.white?.username?.toLowerCase() === searchName;
+        const isBlack = game.black?.username?.toLowerCase() === searchName;
+        
+        if (!isWhite && !isBlack) continue;
 
-            if (!whiteOpenings.has(opening)) {
-                whiteOpenings.set(opening, { count: 0, wins: 0, draws: 0, losses: 0 });
-            }
+        const user = isWhite ? game.white : game.black;
+        const opening = moves.slice(0, 4).join(' ');
+        const isWin = user?.result?.toLowerCase() === 'win' ? 1 : 0;
 
-            const entry = whiteOpenings.get(opening);
-            entry.count++;
-            if (result === 'win') entry.wins++;
-            else if (result === 'draw') entry.draws++;
-            else entry.losses++;
-        }
-
-        // --- Black analysis ---
-        if (game.black.username.toLowerCase() === usernameLower) {
-            const opening = [moves[1], moves[3]].join(' '); // Black's first 2 moves
-            const result = normalizeResult(game.black.result);
-
-            if (!blackOpenings.has(opening)) {
-                blackOpenings.set(opening, { count: 0, wins: 0, draws: 0, losses: 0 });
-            }
-
-            const entry = blackOpenings.get(opening);
-            entry.count++;
-            if (result === 'win') entry.wins++;
-            else if (result === 'draw') entry.draws++;
-            else entry.losses++;
-        }
+        const targetMap = isWhite ? whiteMap : blackMap;
+        const stats = targetMap.get(opening) || { count: 0, wins: 0 };
+        
+        stats.count++;
+        stats.wins += isWin;
+        targetMap.set(opening, stats);
     }
 
-    // --- Find most common openings ---
-    const findMostCommon = (map) => {
-        let maxCount = 0;
-        let commonOpening = '';
-        for (const [opening, data] of map.entries()) {
-            if (data.count > maxCount) {
-                maxCount = data.count;
-                commonOpening = opening;
+    const getTopStats = (map) => {
+        if (map.size === 0) return ["NA", 0, 0];
+        
+        let topOpening = "";
+        let topData = { count: -1, wins: 0 };
+
+        for (const [opening, data] of map) {
+            if (data.count > topData.count) {
+                topOpening = opening;
+                topData = data;
             }
         }
-        return { opening: commonOpening, data: map.get(commonOpening) };
+
+        const winRate = Math.round((topData.wins / topData.count) * 100);
+        return [topOpening, topData.count, winRate];
     };
 
-    const mostWhite = whiteOpenings.size ? findMostCommon(whiteOpenings) : null;
-    const mostBlack = blackOpenings.size ? findMostCommon(blackOpenings) : null;
-
-
-    if (mostWhite) {
-        const { count, wins } = mostWhite.data;
-        const winrate = count ? Math.floor((wins / count)*100) : 'N/A';
-
-        finalOpeningList.push(mostWhite.opening,count,winrate);
-
-    } else {
-       
-        finalOpeningList.push("NA",0,0);
-    }
-
-    if (mostBlack) {
-        const { count, wins } = mostBlack.data;
-        const winrate = count ? Math.floor((wins / count)*100) : 'N/A';
-     
-
-        finalOpeningList.push(mostBlack.opening,count,winrate);
-        
-    } else {
-    
-        finalOpeningList.push("NA",0,0);
-    }
-
-    return finalOpeningList;
+    return [...getTopStats(whiteMap), ...getTopStats(blackMap)];
 }
