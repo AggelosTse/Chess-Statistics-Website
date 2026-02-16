@@ -1,10 +1,28 @@
 let eloChart = null;
 
+function goToSearch() {
+  const nameInput = document.getElementById("name");
+  const mainOpt = document.getElementById("mainOption");
+  
+  if (nameInput) nameInput.value = "";
+  if (mainOpt) mainOpt.selectedIndex = 0;
+  
+  resetAll();
+
+  const resultsPage = document.getElementById("resultsPage");
+  const searchPage = document.getElementById("searchPage");
+  
+  if (resultsPage) resultsPage.style.display = "none";
+  if (searchPage) searchPage.style.display = "flex";
+}
+
 function resetAll() {
-  document.getElementById("subOptionsContainer").innerHTML = "";
-  document.getElementById("submitContainer").innerHTML = "";
-  document.getElementById("resultsContainer").style.display = "none";
+  const subContainer = document.getElementById("subOptionsContainer");
+  const subBtnContainer = document.getElementById("submitContainer");
   const errorDiv = document.getElementById("errorMessage");
+
+  if (subContainer) subContainer.innerHTML = "";
+  if (subBtnContainer) subBtnContainer.innerHTML = "";
   if (errorDiv) {
     errorDiv.style.display = "none";
     errorDiv.textContent = "";
@@ -13,11 +31,12 @@ function resetAll() {
 
 function showSubOptions() {
   resetAll();
-  const mainOption = document.getElementById("mainOption").value;
+  const mainOption = document.getElementById("mainOption")?.value;
   if (!mainOption) return;
 
   const container = document.getElementById("subOptionsContainer");
-  
+  if (!container) return;
+
   const label = document.createElement("label");
   label.textContent = mainOption + " Amount";
   label.classList.add("fade");
@@ -47,137 +66,106 @@ function showSubOptions() {
   const btn = document.createElement("button");
   btn.textContent = "Analyze Statistics";
   btn.className = "fade";
-  btn.onclick = (e) => handleSubmit(e); 
-  document.getElementById("submitContainer").appendChild(btn);
+  btn.onclick = (e) => handleSubmit(e);
+  document.getElementById("submitContainer")?.appendChild(btn);
 }
 
 async function handleSubmit(event) {
-    event.preventDefault();
-    
-    const btn = event.target;
-    const originalText = btn.textContent;
-    
-    const name = document.getElementById("name").value.trim();
-    const mainOption = document.getElementById("mainOption").value;
-    const subOption = parseInt(document.getElementById("subSelect")?.value || "0");
-    const errorDiv = document.getElementById("errorMessage");
-    const resultsContainer = document.getElementById("resultsContainer");
-    const grid = document.getElementById("statsGrid");
+  event.preventDefault();
+  const btn = event.target;
+  const originalText = btn.textContent;
   
-    errorDiv.style.display = "none";    
-    errorDiv.textContent = "";
-    resultsContainer.style.display = "none"; 
-    grid.innerHTML = "";                  
+  const name = document.getElementById("name")?.value.trim();
+  const mainOption = document.getElementById("mainOption")?.value;
+  const subOption = parseInt(document.getElementById("subSelect")?.value || "0");
+  const errorDiv = document.getElementById("errorMessage");
 
-  
-    if (!name) {
-      showError("Please enter a username.");
-      return;
-    }
-  
-
-    btn.disabled = true;
-    btn.textContent = "Searching...";
-  
-    const userInfo = { username: name, main: mainOption, sub: subOption };
-  
-    try {
-      const response = await fetch("/statistics", {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify(userInfo),
-      });
-  
-      const data = await response.json();
-  
-      if (data.type === "Failure") {
-        showError(data.message || "An error occurred fetching data.");
-      } else {
-        resultsContainer.style.display = "block";
-        resultsContainer.scrollIntoView({ behavior: "smooth" });
-        updateChart(data.allElo);
-        displayOtherStats(data);
-      }
-    } catch (err) {
-      showError("Server connection failed.");
-    } finally {
-      btn.disabled = false;
-      btn.textContent = originalText;
-    }
+  if (!name) {
+    showError("Παρακαλώ εισάγετε Username.");
+    return;
   }
+
+
+  btn.disabled = true;
+  btn.textContent = "Searching...";
+  if (errorDiv) errorDiv.style.display = "none";
+
+  try {
+    const response = await fetch("/statistics", {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({ username: name, main: mainOption, sub: subOption }),
+    });
+
+    const data = await response.json();
+
+    if (data.type === "Failure") {
+      showError(data.message || "Σφάλμα κατά την εύρεση δεδομένων.");
+    } else {
+      const sPage = document.getElementById("searchPage");
+      const rPage = document.getElementById("resultsPage");
+      
+      if (sPage) sPage.style.display = "none";
+      if (rPage) rPage.style.display = "flex";
+      
+      updateChart(data.allElo);
+      displayOtherStats(data);
+    }
+  } catch (err) {
+    showError("Αποτυχία σύνδεσης με τον διακομιστή.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
 
 function showError(msg) {
   const errorDiv = document.getElementById("errorMessage");
-  errorDiv.textContent = msg;
-  errorDiv.style.display = "block";
-  errorDiv.classList.remove("fade");
-  void errorDiv.offsetWidth; 
-  errorDiv.classList.add("fade");
+  if (errorDiv) {
+    errorDiv.textContent = msg;
+    errorDiv.style.display = "block";
+  }
 }
 
 function updateChart(dataPoints) {
-  const ctx = document.getElementById("eloChart").getContext("2d");
+  const canvas = document.getElementById("eloChart");
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext("2d");
   if (eloChart) eloChart.destroy();
 
   eloChart = new Chart(ctx, {
     type: "line",
     data: {
       labels: dataPoints.map((_, i) => i + 1),
-      datasets: [
-        {
-          label: "Rating Evolution",
-          data: dataPoints,
-          borderColor: "#81b64c",
-          backgroundColor: "rgba(129, 182, 76, 0.1)",
-          borderWidth: 3,
-          fill: true,
-          tension: 0.3,
-          pointRadius: 3,
-          pointBackgroundColor: "#81b64c",
-        },
-      ],
+      datasets: [{
+        label: "Rating Evolution",
+        data: dataPoints,
+        borderColor: "#81b64c",
+        backgroundColor: "rgba(129, 182, 76, 0.1)",
+        borderWidth: 3,
+        fill: true,
+        tension: 0.3,
+      }],
     },
-    options: {
-      responsive: true,
-      plugins: { legend: { labels: { color: "#fff" } } },
-      scales: {
-        y: {
-          ticks: { color: "#aaa" },
-          grid: { color: "rgba(255,255,255,0.05)" },
-        },
-        x: { ticks: { color: "#aaa" }, grid: { display: false } },
-      },
-    },
+    options: { responsive: true }
   });
 }
 
 function displayOtherStats(results) {
   const grid = document.getElementById("statsGrid");
+  if (!grid) return;
   grid.innerHTML = "";
 
   Object.entries(results).forEach(([key, value]) => {
     if (key === "allElo" || key === "type" || key === "message") return;
-
     const statCard = document.createElement("div");
     statCard.className = "stat-item fade";
-
-    const formattedKey = key
-      .replace(/([A-Z])/g, " $1")
-      .replace(/^./, (str) => str.toUpperCase());
-    const isPercentage = /Percentage|Accuracy|Winrate/i.test(key);
-    const displayValue = isPercentage ? `${value}%` : value;
-
-    statCard.innerHTML = `
-            <div style="font-size: 12px; opacity: 0.7; text-transform: uppercase;">${formattedKey}</div>
-            <div style="font-size: 22px; font-weight: bold; color: var(--primary); margin-top: 5px;">${displayValue}</div>
-        `;
+    const formattedKey = key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
+    statCard.innerHTML = `<div>${formattedKey}</div><div style="font-size: 24px; color: #81b64c;">${value}</div>`;
     grid.appendChild(statCard);
   });
 }
 
-document
-  .getElementById("mainOption")
-  .addEventListener("change", showSubOptions);
+document.getElementById("mainOption")?.addEventListener("change", showSubOptions);
+document.getElementById("backBtn")?.addEventListener("click", goToSearch);

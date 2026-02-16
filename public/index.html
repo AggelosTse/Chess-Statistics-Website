@@ -10,30 +10,36 @@
 <body>
 
   <div class="container">
-    <div class="card search-card">
-        <h2>Chess Analytics</h2>
-        <div class="input-group">
-            <label for="name">Chess.com Username</label>
-            <input type="text" id="name" placeholder="π.χ. MagnusCarlsen">
+    <div id="searchPage" class="page">
+        <div class="card search-card">
+            <h2>Chess Analytics</h2>
+            <div class="input-group">
+                <label for="name">Chess.com Username</label>
+                <input type="text" id="name" placeholder="π.χ. MagnusCarlsen">
+            </div>
+
+            <div class="input-group">
+                <label for="mainOption">Time Category</label>
+                <select id="mainOption">
+                    <option value="">-- Επιλέξτε Διάστημα --</option>
+                    <option value="Days">Ημέρες</option>
+                    <option value="Months">Μήνες</option>
+                    <option value="Years">Έτη</option>
+                </select>
+            </div>
+
+            <div id="subOptionsContainer"></div>
+            <div id="submitContainer"></div>
+
+            <div id="errorMessage" class="error-banner" style="display: none;"></div>
         </div>
-
-        <div class="input-group">
-            <label for="mainOption">Time Category</label>
-            <select id="mainOption">
-                <option value="">-- Επιλέξτε Διάστημα --</option>
-                <option value="Days">Ημέρες</option>
-                <option value="Months">Μήνες</option>
-                <option value="Years">Έτη</option>
-            </select>
-        </div>
-
-        <div id="subOptionsContainer"></div>
-        <div id="submitContainer"></div>
-
-        <div id="errorMessage" class="error-banner" style="display: none;"></div>
     </div>
 
-    <div id="resultsContainer" style="display: none;">
+    <div id="resultsPage" class="page" style="display: none;">
+        <div class="nav-container">
+            <button id="backBtn" class="back-button">← Back to Search</button>
+        </div>
+
         <div class="card chart-card">
             <canvas id="eloChart"></canvas>
         </div>

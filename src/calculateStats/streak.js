@@ -52,7 +52,7 @@ export function streaks(dataFile, name) {
 }
 function findWinStreak(results) {
   let winCounter = 0;
-  let max = -1;
+  let max = 0;
 
   for (let i = 0; i < results.length; i++) {
     if (results[i] === "win") {
@@ -70,7 +70,7 @@ function findWinStreak(results) {
 
 function findDrawStreak(results) {
   let drawCounter = 0;
-  let max = -1;
+  let max = 0;
 
   for (let i = 0; i < results.length; i++) {
     if (results[i] === "draw") {
@@ -88,7 +88,7 @@ function findDrawStreak(results) {
 
 function findLoseStreak(results) {
   let loseCounter = 0;
-  let max = -1;
+  let max = 0;
   for (let i = 0; i < results.length; i++) {
     if (results[i] === "lose") {
       loseCounter++;

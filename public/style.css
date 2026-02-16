@@ -16,23 +16,29 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 40px 20px;
+    margin: 0;
 }
 
 .container {
     width: 100%;
+    max-width: 1000px;
+}
+
+.page {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    animation: fadeIn 0.4s ease forwards;
 }
 
 .card {
     background: var(--card-bg);
     border-radius: 8px;
-    padding: 35px; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    padding: 40px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     width: 100%;
-    max-width: 600px; 
-    transition: transform 0.3s ease;
+    max-width: 650px;
     box-sizing: border-box;
 }
 
@@ -42,12 +48,18 @@ body {
 
 .chart-card {
     max-width: 900px;
-    margin-top: 30px;
+    margin-top: 10px;
+}
+
+.nav-container {
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 20px;
 }
 
 label {
     display: block;
-    margin: 20px 0 8px; 
+    margin: 20px 0 8px;
     font-size: 1rem;
     font-weight: bold;
     color: #bababa;
@@ -55,27 +67,27 @@ label {
 
 input, select {
     width: 100%;
-    padding: 14px; 
-    border-radius: 5px;
+    padding: 15px; 
+    border-radius: 6px;
     border: 1px solid #45423e;
     background: var(--input-bg);
     color: white;
+    font-size: 1.1rem;
     box-sizing: border-box;
-    font-size: 1.1rem; 
 }
 
 button {
     width: 100%;
     margin-top: 25px;
-    padding: 15px; 
+    padding: 16px;
     background: var(--primary);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
     font-size: 1.1rem;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
 button:hover {
@@ -85,41 +97,54 @@ button:hover {
 button:disabled {
     background: #555;
     cursor: not-allowed;
-    filter: none;
+    opacity: 0.8;
+}
+
+.back-button {
+    width: auto;
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.back-button:hover {
+    background: var(--primary);
+    color: white;
 }
 
 #errorMessage {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 5px;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 6px;
     background: rgba(250, 62, 62, 0.1);
     border: 1px solid var(--error);
     color: var(--error);
-    font-weight: bold;
     text-align: center;
-    display: none;
-    animation: fadeIn 0.3s ease;
+    font-weight: bold;
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 15px;
+    gap: 20px;
     width: 100%;
     max-width: 900px;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .stat-item {
     background: var(--card-bg);
-    padding: 15px;
+    padding: 20px;
     border-radius: 8px;
     text-align: center;
-    border-left: 3px solid var(--accent);
+    border-left: 4px solid var(--accent);
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 

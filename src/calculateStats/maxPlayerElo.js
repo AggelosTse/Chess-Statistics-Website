@@ -1,7 +1,7 @@
 export function maxelo(dataFile, name) {
   const searchName = name.toLowerCase();
 
-  let max = -1;
+  let max = 0;
 
   for (let i = 0; i < dataFile.length; i++) {
     let result;

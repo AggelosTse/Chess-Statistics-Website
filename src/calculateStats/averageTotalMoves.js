@@ -11,9 +11,9 @@ export function averageMoves(dataFile, name) {
 
     const movesOnly = dataFile[i]?.pgn
 
-      .replace(/\[.*?\]/gs, "") // Remove headers
-      .replace(/\{.*?\}|\(.*?\)|\$\d+/g, "") // Remove comments and variations
-      .replace(/\d+\.(\.\.)?/g, "") // Remove move numbers
+      .replace(/\[.*?\]/gs, "") 
+      .replace(/\{.*?\}|\(.*?\)|\$\d+/g, "") 
+      .replace(/\d+\.(\.\.)?/g, "") 
       .replace(/\s*(1-0|0-1|1\/2-1\/2)\s*/g, "")
       .trim();
 
