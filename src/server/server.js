@@ -12,26 +12,50 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../../public")));
 
-const port = 3000;
-
+const port = 3000; 
 
 app.post("/statistics", async function (req, res) {
-  try{
+  try {
+    const name = req.body.username;
+    const mainOption = req.body.main;
+    const subOption = req.body.sub;
 
-  
-  const name = req.body.name;
-  const mainOption = req.body.main;
-  const subOption = req.body.sub;
+    if (!name || !mainOption || !subOption) {
+      throw new Error("missing input");
+    }
+    const results = await nextPhase(name, mainOption, subOption);
+    res.status(200).json(results);
 
-  if(!name || !mainOption || !subOption){
-    throw new Error("missing input");
+
+  } catch (error) {
+    console.error(error);
+
+    if(error.message === "missing input"){
+      res.status(401).json({
+        type: "Failure",
+        message: "Some input is missing"
+      })}
+    else if(error.message === "invalid name"){
+      res.status(401).json({
+        type: "Failure",
+        message: "Chess.com Name is invalid"
+      })
+    }
+    else if(error.message === "games list"){
+      res.status(401).json({
+        type: "Failure",
+        message: "Failed to convert games into list"
+      })
+    }
+    else {
+      res.status(401).json({
+        type: "Failure",
+        message: "Unexpected error occured"
+      })
+    }
+    }
   }
-  const results = await nextPhase(name, mainOption, subOption);
-  res.json(results);
-
-  }catch(error){
-      
-  }
-});
+);
 
 app.listen(port);
+

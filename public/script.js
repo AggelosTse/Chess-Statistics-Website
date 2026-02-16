@@ -1,9 +1,14 @@
-
+let eloChart = null;
 
 function resetAll() {
     document.getElementById("subOptionsContainer").innerHTML = "";
     document.getElementById("submitContainer").innerHTML = "";
     document.getElementById("resultsContainer").style.display = "none";
+    const errorDiv = document.getElementById("errorMessage");
+    if (errorDiv) {
+        errorDiv.style.display = "none";
+        errorDiv.textContent = "";
+    }
 }
 
 function showSubOptions() {
@@ -39,50 +44,61 @@ function showSubOptions() {
     container.appendChild(select);
 
     const btn = document.createElement("button");
-    btn.textContent = "Submit";
-    btn.className = "button fade";
+    btn.textContent = "Analyze Statistics";
+    btn.className = "fade";
     btn.onclick = handleSubmit;
     document.getElementById("submitContainer").appendChild(btn);
 }
 
 async function handleSubmit(event) {
-    
     event.preventDefault();
     const name = document.getElementById("name").value.trim();
     const mainOption = document.getElementById("mainOption").value;
     const subOption = parseInt(document.getElementById("subSelect")?.value || "0");
+    const errorDiv = document.getElementById("errorMessage");
+    const resultsContainer = document.getElementById("resultsContainer");
 
-    if (!name) return alert("Enter username");
+    if (!name) {
+        showError("Please enter a username.");
+        return;
+    }
 
-    const userInfo = {
-        username: name,
-        main: mainOption,
-        sub: subOption
-    };
+    const userInfo = { username: name, main: mainOption, sub: subOption };
 
-    const response = await fetch("/statistics",
-        {
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
+    try {
+        const response = await fetch("/statistics", {
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             method: "POST",
             body: JSON.stringify(userInfo)
-        })
-    
-    if(!response.ok){
-        console.error("failed"); 
+        });
+
+        const data = await response.json();
+
+        if (data.type === "Failure") {
+            resultsContainer.style.display = "none";
+            showError(data.message || "An error occurred fetching data.");
+            return;
+        }
+
+        errorDiv.style.display = "none";
+        resultsContainer.style.display = "block";
+        resultsContainer.scrollIntoView({ behavior: 'smooth' });
+
+        updateChart(data.allElo);
+        displayOtherStats(data);
+
+    } catch (err) {
+        showError("Server connection failed.");
     }
-    const data = response.json();
-    
+}
 
-    
-    const container = document.getElementById("resultsContainer");
-    container.style.display = "block";
-    container.scrollIntoView({ behavior: 'smooth' });
-
-    updateChart(results.allElo);
-    displayOtherStats(results);
+function showError(msg) {
+    const errorDiv = document.getElementById("errorMessage");
+    errorDiv.textContent = msg;
+    errorDiv.style.display = "block";
+    errorDiv.classList.remove("fade");
+    void errorDiv.offsetWidth; 
+    errorDiv.classList.add("fade");
 }
 
 function updateChart(dataPoints) {
@@ -96,22 +112,22 @@ function updateChart(dataPoints) {
             datasets: [{
                 label: 'Rating Evolution',
                 data: dataPoints,
-                borderColor: '#5f5df0',
-                backgroundColor: 'rgba(95, 93, 240, 0.1)',
+                borderColor: '#81b64c',
+                backgroundColor: 'rgba(129, 182, 76, 0.1)',
                 borderWidth: 3,
                 fill: true,
-                tension: 0.4,
-                pointRadius: 2
+                tension: 0.3,
+                pointRadius: 3,
+                pointBackgroundColor: '#81b64c'
             }]
         },
         options: {
             responsive: true,
-            animation: { duration: 1500, easing: 'easeOutQuart' },
+            plugins: { legend: { labels: { color: '#fff' } } },
             scales: {
-                y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-                x: { ticks: { color: '#fff' }, grid: { display: false } }
-            },
-            plugins: { legend: { labels: { color: '#fff' } } }
+                y: { ticks: { color: '#aaa' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                x: { ticks: { color: '#aaa' }, grid: { display: false } }
+            }
         }
     });
 }
@@ -121,26 +137,22 @@ function displayOtherStats(results) {
     grid.innerHTML = "";
 
     Object.entries(results).forEach(([key, value]) => {
-        if (key === "allElo") return; 
+      
+        if (key === "allElo" || key === "type" || key === "message") return; 
 
         const statCard = document.createElement("div");
-        statCard.className = "card fade";
-        statCard.style.width = "auto";
-        statCard.style.margin = "0";
+        statCard.className = "stat-item fade";
         
-   
         const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-     
         const isPercentage = /Percentage|Accuracy|Winrate/i.test(key);
         const displayValue = isPercentage ? `${value}%` : value;
 
         statCard.innerHTML = `
-            <div style="font-size: 11px; opacity: 0.6; line-height: 1.2;">${formattedKey}</div>
-            <div style="font-size: 18px; font-weight: bold; color: #5f5df0; margin-top: 5px;">${displayValue}</div>
+            <div style="font-size: 12px; opacity: 0.7; text-transform: uppercase;">${formattedKey}</div>
+            <div style="font-size: 22px; font-weight: bold; color: var(--primary); margin-top: 5px;">${displayValue}</div>
         `;
         grid.appendChild(statCard);
     });
 }
 
-let eloChart = null;
 document.getElementById("mainOption").addEventListener("change", showSubOptions);

@@ -1,43 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
+  <title>Chess Stats Tracker</title>
   <link rel="stylesheet" href="style.css">
-  </head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
 <body>
 
-  
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<div id="resultsContainer" style="display: none; width: 90%; max-width: 900px; margin: 30px auto;">
-    <div class="card" style="width: 100%; margin-bottom: 20px;">
-        <canvas id="eloChart"></canvas>
-    </div>
-    
-    <div id="statsGrid" class="stats-grid">
+  <div class="container">
+    <div class="card search-card">
+        <h2>Chess Analytics</h2>
+        <div class="input-group">
+            <label for="name">Chess.com Username</label>
+            <input type="text" id="name" placeholder="π.χ. MagnusCarlsen">
         </div>
-</div>
 
-  <div class="card">
-      <label>Chess.com Username</label>
-      <input type="text" id="name" placeholder="Enter your username">
+        <div class="input-group">
+            <label for="mainOption">Time Category</label>
+            <select id="mainOption">
+                <option value="">-- Επιλέξτε Διάστημα --</option>
+                <option value="Days">Ημέρες</option>
+                <option value="Months">Μήνες</option>
+                <option value="Years">Έτη</option>
+            </select>
+        </div>
 
-      <label>Time Category</label>
-      <select id="mainOption">
-          <option value="">-- Select Time Range --</option>
-          <option value="Days">Days</option>
-          <option value="Months">Months</option>
-          <option value="Years">Years</option>
-      </select>
+        <div id="subOptionsContainer"></div>
+        <div id="submitContainer"></div>
 
-      <div id="subOptionsContainer"></div>
-      <div id="submitContainer"></div>
+        <div id="errorMessage" class="error-banner" style="display: none;"></div>
+    </div>
+
+    <div id="resultsContainer" style="display: none;">
+        <div class="card chart-card">
+            <canvas id="eloChart"></canvas>
+        </div>
+        
+        <div id="statsGrid" class="stats-grid">
+            </div>
+    </div>
   </div>
 
   <script type="module" src="script.js"></script>
-  
 </body>
 </html>
