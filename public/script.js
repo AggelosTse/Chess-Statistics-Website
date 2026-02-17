@@ -1,13 +1,21 @@
 let eloChart = null;
 
-// Categorization Map
 const CATEGORIES = {
-    "Performance": ["highestRating", "lowestRating", "currentRating", "averageElo", "eloChange"],
-    "Game Results": ["totalGames", "wins", "losses", "draws", "winRate"],
-    "Skill Metrics": ["accuracy", "averageAccuracy", "brilliantMoves", "bestWin"]
+    "Accuracy Metrics": ["GeneralAverageAccuracy", "WhiteAverageAccuracy", "BlackAverageAccuracy"],
+    "General Game Data": ["totalGames", "AverageSumOfMoves ", "maxPlayerElo"],
+    "Opponent Data": ["averageOpponentElo", "highestOpponentEloPlayed", "highestOpponentEloWon"],
+    "Wins": ["wonByCheckMate", "wonByResignation", "wonByTimeout"],
+    "Win Probabilities": ["wonByCheckmatePercentage", "wonByResignationPercentage", "wonByTimeoutPercentage"],
+    "Losses": ["loseByCheckmates", "loseByResignation", "loseByTimeout"],
+    "Loss Probabilities": ["loseByCheckmatesPercentage", "loseByResignationPercentage", "loseByTimeoutPercentage"],
+    "Draws": ["drawByStalemate", "drawByAgreement", "drawByRepetition", "drawByInsufficient"],
+    "Draw Probabilities": ["drawByStalematePercentage", "drawByAgreementPercentage", "drawByRepetitionPercentage", "drawByInsufficientPercentage"],
+    "Opening Analytics (White)": ["WhiteMostCommonOpening", "WhiteCommonOpeningCounter", "WhiteCommonOpeningWinrate"],
+    "Opening Analytics (Black)": ["BlackMostCommonOpening", "BlackCommonOpeningCounter", "BlackCommonOpeningWinrate"],
+    "Performance Streaks": ["WinStreak", "DrawStreak", "LoseStreak"]
 };
 
-const formatKey = (key) => key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
+const formatKey = (key) => key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase()).trim();
 
 function goToSearch() {
     document.getElementById("name").value = "";
@@ -28,14 +36,11 @@ function showSubOptions() {
     resetAll();
     const mainOption = document.getElementById("mainOption")?.value;
     if (!mainOption) return;
-
     const container = document.getElementById("subOptionsContainer");
     const label = document.createElement("label");
     label.textContent = mainOption + " Amount";
-
     const select = document.createElement("select");
     select.id = "subSelect";
-
     let options = (mainOption === "Days") ? [1, 3, 7, 14, 21, 30] : 
                   (mainOption === "Months") ? [1, 2, 3, 6, 9, 12] : 
                   Array.from({length: 5}, (_, i) => new Date().getFullYear() - i);
@@ -45,7 +50,6 @@ function showSubOptions() {
         opt.value = val; opt.textContent = val;
         select.appendChild(opt);
     });
-
     container.append(label, select);
     const btn = document.createElement("button");
     btn.textContent = "Analyze Statistics";
@@ -56,25 +60,19 @@ function showSubOptions() {
 async function handleSubmit(event) {
     event.preventDefault();
     const btn = event.target;
-    const originalText = btn.textContent;
     const name = document.getElementById("name")?.value.trim();
     const mainOption = document.getElementById("mainOption")?.value;
     const subOption = document.getElementById("subSelect")?.value;
-
     if (!name) { showError("Παρακαλώ εισάγετε Username."); return; }
-
     btn.disabled = true;
     btn.textContent = "Searching...";
-
     try {
         const response = await fetch("/statistics", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username: name, main: mainOption, sub: subOption }),
         });
-
         const data = await response.json();
-
         if (data.type === "Failure") {
             showError(data.message);
         } else {
@@ -83,54 +81,59 @@ async function handleSubmit(event) {
             updateChart(data.allElo);
             displayOtherStats(data);
         }
-    } catch (err) {
-        showError("Σφάλμα σύνδεσης με τον διακομιστή.");
-    } finally {
-        btn.disabled = false;
-        btn.textContent = originalText;
-    }
+    } catch (err) { showError("Σφάλμα σύνδεσης."); }
+    finally { btn.disabled = false; btn.textContent = "Analyze Statistics"; }
 }
 
 function displayOtherStats(results) {
     const container = document.getElementById("statsContainer");
     if (!container) return;
     container.innerHTML = "";
-
     const usedKeys = ["allElo", "type", "message"];
 
-    // Render defined categories
-    Object.entries(CATEGORIES).forEach(([catName, keys]) => {
-        const stats = Object.entries(results).filter(([key]) => keys.includes(key));
+    Object.entries(CATEGORIES).forEach(([catTitle, keys]) => {
+        const stats = Object.entries(results).filter(([key]) => keys.includes(key.trim()));
         if (stats.length > 0) {
-            renderCategoryRow(container, catName, stats);
-            stats.forEach(([k]) => usedKeys.push(k));
+            renderCategoryRow(container, catTitle, stats);
+            stats.forEach(([k]) => usedKeys.push(k.trim()));
         }
     });
 
-    // Render any remaining data
-    const leftovers = Object.entries(results).filter(([key]) => !usedKeys.includes(key));
-    if (leftovers.length > 0) renderCategoryRow(container, "Additional Info", leftovers);
+    const leftovers = Object.entries(results).filter(([key]) => !usedKeys.includes(key.trim()));
+    if (leftovers.length > 0) renderCategoryRow(container, "Additional Insights", leftovers);
 }
 
 function renderCategoryRow(parent, title, stats) {
     const row = document.createElement("div");
     row.className = "category-row fade";
-    row.innerHTML = `<div class="category-title">${title}</div>`;
-    
+    row.innerHTML = `<div class="category-title"><span></span>${title}</div>`;
     const grid = document.createElement("div");
     grid.className = "stats-grid";
 
     stats.forEach(([key, value]) => {
-        const isPct = /Percentage|Winrate|Accuracy/i.test(key);
+        const lowerKey = key.toLowerCase();
+      
+        const isPct = lowerKey.includes("percentage") || lowerKey.includes("winrate") || lowerKey.includes("accuracy");
+        
+        let valColor = "white";
+
+       
+        if (lowerKey.includes("won") || lowerKey.includes("win")) {
+            valColor = "var(--primary)"; // Green
+        } else if (lowerKey.includes("lose") || lowerKey.includes("loss")) {
+            valColor = "var(--error)";   // Red
+        } else if (lowerKey.includes("draw")) {
+            valColor = "var(--draw)";    // Gray
+        }
+
         grid.innerHTML += `
             <div class="stat-item">
                 <div class="stat-label">${formatKey(key)}</div>
-                <div class="stat-value" style="color: ${isPct ? 'var(--primary)' : 'white'}">
+                <div class="stat-value" style="color: ${valColor}">
                     ${value}${isPct ? '%' : ''}
                 </div>
             </div>`;
     });
-
     row.appendChild(grid);
     parent.appendChild(row);
 }
@@ -149,18 +152,10 @@ function updateChart(dataPoints) {
                 backgroundColor: "rgba(129, 182, 76, 0.1)",
                 borderWidth: 3,
                 fill: true,
-                tension: 0.3,
-                pointRadius: 4
+                tension: 0.3
             }]
         },
-        options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { grid: { color: "rgba(255,255,255,0.05)" }, ticks: { color: "#aaa" } },
-                x: { display: false }
-            }
-        }
+        options: { responsive: true, plugins: { legend: { display: false } } }
     });
 }
 
