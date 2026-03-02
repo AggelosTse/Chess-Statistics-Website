@@ -20,11 +20,11 @@ A website that fetches data from the Chess.com public API, calculates various st
 
 ## Tech Stack
 
--Frontend
+# Frontend
   -Javascript
   -html
   -css
   - Charting library (Chart.js)
--Backend
+# Backend
   - Express.js 
   - Chess.com Public API
