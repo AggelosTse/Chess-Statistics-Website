@@ -4,7 +4,7 @@ A website that fetches data from the Chess.com public API, calculates various st
 
 ---
 
- ## Features
+ # Features
  
 - Fetches player data from the Chess.com Public API  
 - Calculates custom performance statistics  
@@ -18,13 +18,13 @@ A website that fetches data from the Chess.com public API, calculates various st
 - 
 ---
 
-## Tech Stack
+# Tech Stack
 
-# Frontend
+## Frontend
   - Javascript
   - html
   - css
   - Charting library (Chart.js)
-# Backend
+## Backend
   - Express.js 
   - Chess.com Public API
