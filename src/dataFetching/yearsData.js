@@ -4,15 +4,15 @@ export async function getYearsData(name, subOption) {
     const currentYear = now.getUTCFullYear();
     const currentMonth = now.getUTCMonth() + 1; // 1-indexed
 
-
-    const maxMonth = (yearToFetch === currentYear) ? currentMonth : 12;     //if user wants this year, 
+    
+    const maxMonth = (subOption === currentYear) ? currentMonth : 12;     //if user wants this year, 
     //the max Month should be the current month. Else, take the whole 12 months
 
     const fetchPromises = [];
 
     for (let i = 1; i <= maxMonth; i++) {
         const month = String(i).padStart(2, '0');       //pads month 1 -> 01 for the API
-        const url = `https://api.chess.com/pub/player/${name}/games/${yearToFetch}/${month}`;       //fetches the API
+        const url = `https://api.chess.com/pub/player/${name}/games/${subOption}/${month}`;       //fetches the API
         
         fetchPromises.push(         //stores the responses in a list
             fetch(url)

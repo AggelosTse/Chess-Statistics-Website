@@ -63,7 +63,6 @@ async function handleSubmit(event) {
     const name = document.getElementById("name")?.value.trim();
     const mainOption = document.getElementById("mainOption")?.value;
     const subOption = document.getElementById("subSelect")?.value;
-    if (!name) { showError("Παρακαλώ εισάγετε Username."); return; }
     btn.disabled = true;
     btn.textContent = "Searching...";
     try {

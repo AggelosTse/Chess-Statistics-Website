@@ -66,9 +66,11 @@ body {
 }
 
 .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    display: flex;
+    flex-wrap: wrap;       /* Allows items to go to the next line */
+    justify-content: center; /* Centers the items horizontally in every row */
     gap: 15px;
+    width: 100%;
 }
 
 .stat-item {
@@ -78,6 +80,10 @@ body {
     text-align: center;
     border-bottom: 3px solid var(--input-bg);
     transition: all 0.3s ease;
+    
+    /* Give items a consistent base size so they look like a grid */
+    flex: 1 1 220px; 
+    max-width: 300px; /* Prevents a single item from stretching too wide */
 }
 
 .stat-item:hover {
