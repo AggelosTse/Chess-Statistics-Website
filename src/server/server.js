@@ -31,24 +31,24 @@ app.post("/statistics", async function (req, res) {
     console.error(error);
 
     if(error.message === "missing input"){
-      res.status(401).json({
+      res.status(400).json({
         type: "Failure",
         message: "Some input is missing"
       })}
     else if(error.message === "invalid name"){
-      res.status(401).json({
+      res.status(400).json({
         type: "Failure",
         message: "Chess.com Name is invalid"
       })
     }
     else if(error.message === "games list"){
-      res.status(401).json({
+      res.status(400).json({
         type: "Failure",
         message: "Failed to convert games into list"
       })
     }
     else {
-      res.status(401).json({
+      res.status(500).json({
         type: "Failure",
         message: "Unexpected error occured"
       })
